@@ -1,4 +1,4 @@
-package one.aves.proxy.network.protocol;
+package one.aves.api.connection;
 
 public enum ProtocolVersion {
 

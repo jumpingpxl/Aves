@@ -1,10 +1,11 @@
 package one.aves.proxy;
 
 import one.aves.api.AvesServer;
+import one.aves.api.service.Service;
 
-public class Aves implements AvesServer {
+public class Aves extends AvesServer implements Service {
 
-	public Aves() {
-
+	protected Aves() {
+		addService(this);
 	}
 }

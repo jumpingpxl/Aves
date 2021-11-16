@@ -1,5 +1,8 @@
 package one.aves.api;
 
-public interface AvesServer {
+import one.aves.api.service.ServiceProvider;
 
+public abstract class AvesServer extends ServiceProvider {
+
+	private static AvesServer instance;
 }

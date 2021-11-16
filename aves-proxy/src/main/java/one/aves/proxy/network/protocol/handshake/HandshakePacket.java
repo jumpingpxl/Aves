@@ -8,14 +8,14 @@ import one.aves.proxy.network.protocol.ProtocolVersion;
 public class HandshakePacket implements NettyPacket {
 
 	private int protocolVersion;
-	private String serverAdress;
+	private String serverAddress;
 	private int serverPort;
 	private byte nextState;
 
 	@Override
 	public void decode(ByteBuffer byteBuffer, Direction direction, ProtocolVersion protocol) {
 		protocolVersion = byteBuffer.readVarInt();
-		serverAdress = byteBuffer.readString();
+		serverAddress = byteBuffer.readString();
 		serverPort = byteBuffer.readUnsignedShort();
 		nextState = byteBuffer.readByte();
 	}
@@ -23,5 +23,33 @@ public class HandshakePacket implements NettyPacket {
 	@Override
 	public void encode(ByteBuffer byteBuffer, Direction direction, ProtocolVersion protocol) {
 
+	}
+
+	public int getProtocolVersion() {
+		return protocolVersion;
+	}
+
+	public void setProtocolVersion(int protocolVersion) {
+		this.protocolVersion = protocolVersion;
+	}
+
+	public String getServerAddress() {
+		return serverAddress;
+	}
+
+	public void setServerAddress(String serverAddress) {
+		this.serverAddress = serverAddress;
+	}
+
+	public int getServerPort() {
+		return serverPort;
+	}
+
+	public void setServerPort(int serverPort) {
+		this.serverPort = serverPort;
+	}
+
+	public byte getNextState() {
+		return nextState;
 	}
 }

@@ -3,7 +3,7 @@ package one.aves.proxy.network;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import one.aves.api.console.ConsoleLogger;
-import one.aves.proxy.network.protocol.ConnectionState;
+import one.aves.proxy.network.protocol.connectionstate.ConnectionState;
 
 public class MinecraftConnection extends ChannelInboundHandlerAdapter {
 

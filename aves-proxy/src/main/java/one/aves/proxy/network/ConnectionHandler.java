@@ -15,7 +15,7 @@ public class ConnectionHandler {
 
 	private static final WriteBufferWaterMark SERVER_WRITE_MARK = new WriteBufferWaterMark(1 << 20,
 			1 << 21);
-	private static final ConsoleLogger LOGGER = ConsoleLogger.getLogger(ConnectionHandler.class);
+	private static final ConsoleLogger LOGGER = ConsoleLogger.of(ConnectionHandler.class);
 
 	private final ServerChannelInitializer serverChannelInitializer;
 	private final TransportType transportType;

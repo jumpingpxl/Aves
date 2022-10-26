@@ -12,7 +12,7 @@ import one.aves.proxy.network.protocol.connectionstate.ConnectionState;
 
 public class PacketEncoder extends MessageToByteEncoder<NettyPacket> {
 
-	private static final ConsoleLogger LOGGER = ConsoleLogger.getLogger(PacketEncoder.class);
+	private static final ConsoleLogger LOGGER = ConsoleLogger.of(PacketEncoder.class);
 	private final Direction direction;
 
 	public PacketEncoder(Direction direction) {

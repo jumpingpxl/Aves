@@ -14,7 +14,7 @@ public class ConsoleLogger {
 		//logger = Logger.getLogger(classLoader.getName());
 	}
 
-	public static ConsoleLogger getLogger(Class<?> clazz) {
+	public static ConsoleLogger of(Class<?> clazz) {
 		return new ConsoleLogger(clazz);
 	}
 

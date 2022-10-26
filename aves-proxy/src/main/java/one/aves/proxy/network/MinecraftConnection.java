@@ -20,7 +20,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class MinecraftConnection extends SimpleChannelInboundHandler<NettyPacket> {
 
-	private static final ConsoleLogger LOGGER = ConsoleLogger.getLogger(MinecraftConnection.class);
+	private static final ConsoleLogger LOGGER = ConsoleLogger.of(MinecraftConnection.class);
 
 	private final Direction direction;
 	private final ReentrantReadWriteLock readWriteLock = new ReentrantReadWriteLock();

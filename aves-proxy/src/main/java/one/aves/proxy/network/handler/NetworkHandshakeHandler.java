@@ -7,8 +7,7 @@ import one.aves.proxy.network.protocol.packet.handshake.HandshakePacket;
 
 public class NetworkHandshakeHandler implements NetworkHandler {
 
-	private static final ConsoleLogger LOGGER = ConsoleLogger.getLogger(
-			NetworkHandshakeHandler.class);
+	private static final ConsoleLogger LOGGER = ConsoleLogger.of(NetworkHandshakeHandler.class);
 	private final MinecraftConnection connection;
 
 	public NetworkHandshakeHandler(MinecraftConnection connection) {

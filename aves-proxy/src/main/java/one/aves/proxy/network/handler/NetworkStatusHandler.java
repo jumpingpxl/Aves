@@ -7,7 +7,7 @@ import one.aves.proxy.network.protocol.packet.status.StatusPacket;
 
 public class NetworkStatusHandler implements NetworkHandler {
 
-	private static final ConsoleLogger LOGGER = ConsoleLogger.getLogger(NetworkStatusHandler.class);
+	private static final ConsoleLogger LOGGER = ConsoleLogger.of(NetworkStatusHandler.class);
 	private final MinecraftConnection connection;
 	private boolean requestedStatus;
 

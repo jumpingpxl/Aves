@@ -14,7 +14,7 @@ import java.util.List;
 
 public class PacketDecoder extends ByteToMessageDecoder {
 
-	private static final ConsoleLogger LOGGER = ConsoleLogger.getLogger(PacketDecoder.class);
+	private static final ConsoleLogger LOGGER = ConsoleLogger.of(PacketDecoder.class);
 	private final Direction direction;
 
 	public PacketDecoder(Direction direction) {

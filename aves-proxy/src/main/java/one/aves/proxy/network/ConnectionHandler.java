@@ -47,9 +47,9 @@ public class ConnectionHandler {
 		bootstrap.bind().addListener((ChannelFutureListener) future -> {
 			Channel channel = future.channel();
 			if (future.isSuccess()) {
-				LOGGER.printInfo("Listening on {0}.", channel.localAddress());
+				LOGGER.printInfo("Listening on %s.", channel.localAddress());
 			} else {
-				LOGGER.printSevere("Can't bind to {0}! (Cause: {1})", address, future.cause());
+				LOGGER.printSevere("Can't bind to %s! (Cause: %s)", address, future.cause());
 			}
 		});
 	}

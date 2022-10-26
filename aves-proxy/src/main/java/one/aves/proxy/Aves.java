@@ -11,7 +11,7 @@ public class Aves extends AvesServer implements Service {
 	private final ConnectionHandler connectionHandler;
 
 	protected Aves() {
-		addService(this);
+		add(this);
 
 		connectionHandler = new ConnectionHandler();
 	}

@@ -15,6 +15,6 @@ public class Launcher {
 		new Aves().start();
 
 		double bootTime = (System.currentTimeMillis() - startTime) / 1000D;
-		LOGGER.printInfo("Done in {0} seconds!", new DecimalFormat("#.##").format(bootTime));
+		LOGGER.printInfo("Done in %s seconds!", new DecimalFormat("#.##").format(bootTime));
 	}
 }

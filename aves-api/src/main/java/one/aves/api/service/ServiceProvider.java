@@ -6,14 +6,20 @@ import java.util.Map;
 
 public abstract class ServiceProvider {
 
-	private static final Map<Class<? extends Service>, Service> services = Maps.newHashMap();
+	private static final Map<Class<? extends Service>, Service> SERVICES = Maps.newHashMap();
 
-	public final synchronized <T extends Service> T getService(
-			Class<? extends Service> serviceClass) {
-		return (T) services.get(serviceClass);
+	public final synchronized <T extends Service> T get(Class<T> serviceClass) {
+		return (T) SERVICES.get(serviceClass);
 	}
 
-	public final synchronized void addService(Service service) {
-		services.put(service.getClass(), service);
+	public final synchronized void add(Service service) {
+		Class<? extends Service> serviceClass = service.getClass();
+		Service existingService = SERVICES.get(serviceClass);
+		if (existingService != null) {
+			throw new IllegalStateException(
+					"Service " + serviceClass.getName() + " is already " + "registered exists");
+		}
+
+		SERVICES.put(serviceClass, service);
 	}
 }

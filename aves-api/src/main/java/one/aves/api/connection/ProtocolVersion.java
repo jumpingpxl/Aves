@@ -1,5 +1,8 @@
 package one.aves.api.connection;
 
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.util.AttributeKey;
+
 public enum ProtocolVersion {
 
 	UNKNOWN(-1, "Unknown"),
@@ -39,6 +42,9 @@ public enum ProtocolVersion {
 
 	private static final ProtocolVersion[] VALUES = values();
 
+	public static final AttributeKey<ProtocolVersion> ATTRIBUTE_KEY = AttributeKey.valueOf(
+			"version");
+
 	private final int protocol;
 	private final String[] names;
 
@@ -55,7 +61,7 @@ public enum ProtocolVersion {
 		return names;
 	}
 
-	public ProtocolVersion getByProtocol(int protocol) {
+	public static ProtocolVersion getByProtocol(int protocol) {
 		ProtocolVersion version = UNKNOWN;
 		for (ProtocolVersion protocolVersion : VALUES) {
 			if (protocolVersion.protocol == protocol) {
@@ -65,5 +71,14 @@ public enum ProtocolVersion {
 		}
 
 		return version;
+	}
+
+	public static ProtocolVersion fromContext(ChannelHandlerContext context) {
+		ProtocolVersion protocolVersion = context.channel().attr(ATTRIBUTE_KEY).get();
+		if (protocolVersion == null) {
+			return UNKNOWN;
+		}
+
+		return protocolVersion;
 	}
 }

@@ -34,7 +34,7 @@ public enum ConnectionState {
 
 	public static final AttributeKey<ConnectionState> ATTRIBUTE_KEY = AttributeKey.valueOf(
 			"protocol");
-	private static Map<Class<? extends NettyPacket<?>>, ConnectionState> PACKET_STATES;
+	private static Map<Class<? extends NettyPacket<?>>, ConnectionState> packetStates;
 
 	private final int id;
 	private final BiMap<Integer, Class<? extends NettyPacket<?>>> clientBound;
@@ -53,20 +53,20 @@ public enum ConnectionState {
 	}
 
 	public static ConnectionState fromPacket(Class<? extends NettyPacket> packetClass) {
-		return PACKET_STATES.get(packetClass);
+		return packetStates.get(packetClass);
 	}
 
 	public int getId() {
 		return id;
 	}
 
-	public NettyPacket get(Direction direction, int packetId) {
+	public NettyPacket<?> get(Direction direction, int packetId) {
 		Map<Integer, Class<? extends NettyPacket<?>>> directionMap = this.getDirectionMap(direction);
 		if (directionMap == null) {
 			throw new NullPointerException("Could not find direction map for " + direction);
 		}
 
-		Class<? extends NettyPacket> packetClass = directionMap.get(packetId);
+		Class<? extends NettyPacket<?>> packetClass = directionMap.get(packetId);
 		if (packetClass == null) {
 			return null;
 		}
@@ -79,7 +79,7 @@ public enum ConnectionState {
 		}
 	}
 
-	public int get(Direction direction, NettyPacket nettyPacket) {
+	public int get(Direction direction, NettyPacket<?> nettyPacket) {
 		return this.get(direction, nettyPacket.getClass());
 	}
 
@@ -99,22 +99,14 @@ public enum ConnectionState {
 
 	private ConnectionState registerClientBound(int packetId,
 	                                            Class<? extends NettyPacket<?>> packetClass) {
-		if (PACKET_STATES == null) {
-			PACKET_STATES = Maps.newHashMap();
-		}
-
-		PACKET_STATES.put(packetClass, this);
+		this.registerPacket(packetClass);
 		clientBound.put(packetId, packetClass);
 		return this;
 	}
 
 	private ConnectionState registerServerBound(int packetId,
 	                                            Class<? extends NettyPacket<?>> packetClass) {
-		if (PACKET_STATES == null) {
-			PACKET_STATES = Maps.newHashMap();
-		}
-
-		PACKET_STATES.put(packetClass, this);
+		this.registerPacket(packetClass);
 		serverBound.put(packetId, packetClass);
 		return this;
 	}
@@ -129,5 +121,13 @@ public enum ConnectionState {
 		}
 
 		return null;
+	}
+
+	private void registerPacket(Class<? extends NettyPacket<?>> packetClass) {
+		if (packetStates == null) {
+			packetStates = Maps.newHashMap();
+		}
+
+		packetStates.put(packetClass, this);
 	}
 }

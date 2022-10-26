@@ -61,6 +61,14 @@ public enum ProtocolVersion {
 		return names;
 	}
 
+	public boolean isBefore(ProtocolVersion version) {
+		return this.protocol < version.protocol;
+	}
+
+	public boolean isAfter(ProtocolVersion version) {
+		return this.protocol >= version.protocol;
+	}
+
 	public static ProtocolVersion getByProtocol(int protocol) {
 		ProtocolVersion version = UNKNOWN;
 		for (ProtocolVersion protocolVersion : VALUES) {

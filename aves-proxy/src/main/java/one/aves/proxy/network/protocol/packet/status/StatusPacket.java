@@ -15,9 +15,7 @@ public class StatusPacket implements StatusNettyPacket {
 
 	@Override
 	public void encode(ByteBuffer byteBuffer, Direction direction, ProtocolVersion protocol) {
-		String input = new ServerPing().toJsonString(protocol);
-		System.out.println("StatusPacket.encode() input: " + input);
-		byteBuffer.writeString(input);
+		byteBuffer.writeString(new ServerPing().toJsonString(protocol));
 		//byteBuffer.writeString(GsonFactory.serialize(GsonIdentifier.SERVER_INFO, new ServerPing()));
 	}
 

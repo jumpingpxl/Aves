@@ -11,22 +11,22 @@ import java.util.Set;
 
 public class TextColor {
 
-	public static final TextColor BLACK = new TextColor("#000000", '0');
-	public static final TextColor DARK_BLUE = new TextColor("#0000aa", '1');
-	public static final TextColor GREEN = new TextColor("#00aa00", '2');
-	public static final TextColor CYAN = new TextColor("#00aaaa", '3');
-	public static final TextColor DARK_RED = new TextColor("#aa0000", '4');
-	public static final TextColor PURPLE = new TextColor("#aa00aa", '5');
-	public static final TextColor GOLD = new TextColor("#ffaa00", '6');
-	public static final TextColor GRAY = new TextColor("#aaaaaa", '7');
-	public static final TextColor DARK_GRAY = new TextColor("#555555", '8');
-	public static final TextColor BLUE = new TextColor("#5555ff", '9');
-	public static final TextColor LIME = new TextColor("#55ff55", 'a');
-	public static final TextColor AQUA = new TextColor("#55ffff", 'b');
-	public static final TextColor RED = new TextColor("#ff5555", 'c');
-	public static final TextColor PINK = new TextColor("#ff55ff", 'd');
-	public static final TextColor YELLOW = new TextColor("#ffff55", 'e');
-	public static final TextColor WHITE = new TextColor("#ffffff", 'f');
+	public static final TextColor BLACK = new TextColor("black", '0');
+	public static final TextColor DARK_BLUE = new TextColor("dark_blue", '1');
+	public static final TextColor GREEN = new TextColor("dark_green", '2');
+	public static final TextColor CYAN = new TextColor("dark_aqua", '3');
+	public static final TextColor DARK_RED = new TextColor("dark_red", '4');
+	public static final TextColor PURPLE = new TextColor("dark_purple", '5');
+	public static final TextColor GOLD = new TextColor("gold", '6');
+	public static final TextColor GRAY = new TextColor("gray", '7');
+	public static final TextColor DARK_GRAY = new TextColor("dark_gray", '8');
+	public static final TextColor BLUE = new TextColor("blue", '9');
+	public static final TextColor LIME = new TextColor("green", 'a');
+	public static final TextColor AQUA = new TextColor("aqua", 'b');
+	public static final TextColor RED = new TextColor("red", 'c');
+	public static final TextColor PINK = new TextColor("light_purple", 'd');
+	public static final TextColor YELLOW = new TextColor("yellow", 'e');
+	public static final TextColor WHITE = new TextColor("white", 'f');
 
 	public static final Set<TextColor> VALUES = Collections.unmodifiableSet(
 			Sets.newHashSet(BLACK, DARK_BLUE, GREEN, CYAN, DARK_RED, PURPLE, GOLD, GRAY, DARK_GRAY, BLUE,
@@ -35,19 +35,19 @@ public class TextColor {
 	private final String value;
 	private final Character legacyCharacter;
 
-	private TextColor(String hex, Character legacyCharacter) {
-		this.value = hex;
+	private TextColor(String value, Character legacyCharacter) {
+		this.value = value;
 		this.legacyCharacter = legacyCharacter;
 	}
 
-	private TextColor(String hex) {
-		Objects.requireNonNull(hex, "Hex code cannot be null");
-		this.value = hex;
+	private TextColor(String value) {
+		Objects.requireNonNull(value, "Value cannot be null");
+		this.value = value;
 		this.legacyCharacter = null;
 	}
 
-	public static TextColor of(@Nonnull String hex) {
-		return new TextColor(hex);
+	public static TextColor of(@Nonnull String value) {
+		return new TextColor(value);
 	}
 
 	public static TextColor of(int rgb) {

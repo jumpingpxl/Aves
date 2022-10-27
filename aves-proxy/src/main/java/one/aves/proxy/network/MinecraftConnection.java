@@ -10,11 +10,16 @@ import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
 import one.aves.api.connection.ProtocolVersion;
 import one.aves.api.console.ConsoleLogger;
+import one.aves.proxy.Aves;
+import one.aves.proxy.network.encryption.EncryptionDecoder;
+import one.aves.proxy.network.encryption.EncryptionEncoder;
 import one.aves.proxy.network.handler.NetworkHandler;
 import one.aves.proxy.network.protocol.Direction;
 import one.aves.proxy.network.protocol.NettyPacket;
 import one.aves.proxy.network.protocol.connectionstate.ConnectionState;
+import one.aves.proxy.util.EncryptionHelper;
 
+import javax.crypto.SecretKey;
 import java.util.Queue;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -22,6 +27,7 @@ public class MinecraftConnection extends SimpleChannelInboundHandler<NettyPacket
 
 	private static final ConsoleLogger LOGGER = ConsoleLogger.of(MinecraftConnection.class);
 
+	private final Aves aves;
 	private final Direction direction;
 	private final ReentrantReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 	private final Queue<InboundHandlerTuplePacketListener> outboundPacketsQueue =
@@ -30,8 +36,10 @@ public class MinecraftConnection extends SimpleChannelInboundHandler<NettyPacket
 	private Channel channel;
 
 	private NetworkHandler networkHandler;
+	private boolean encrypted;
 
-	public MinecraftConnection(Direction direction) {
+	public MinecraftConnection(Aves aves, Direction direction) {
+		this.aves = aves;
 		this.direction = direction;
 		LOGGER.printInfo("Created MinecraftConnection with direction %s", direction);
 	}
@@ -161,6 +169,18 @@ public class MinecraftConnection extends SimpleChannelInboundHandler<NettyPacket
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
 		super.exceptionCaught(ctx, cause);
+	}
+
+	public Aves aves() {
+		return aves;
+	}
+
+	public void enableEncryption(SecretKey secretKey) {
+		this.encrypted = true;
+		this.channel.pipeline().addBefore("splitter", "decrypt",
+				new EncryptionDecoder(EncryptionHelper.createNetCipherInstance(2, secretKey)));
+		this.channel.pipeline().addBefore("prepender", "encrypt",
+				new EncryptionEncoder(EncryptionHelper.createNetCipherInstance(1, secretKey)));
 	}
 
 	static class InboundHandlerTuplePacketListener {

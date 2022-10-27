@@ -8,11 +8,11 @@ public abstract class ServiceProvider {
 
 	private static final Map<Class<? extends Service>, Service> SERVICES = Maps.newHashMap();
 
-	public final synchronized <T extends Service> T get(Class<T> serviceClass) {
+	public static synchronized <T extends Service> T get(Class<T> serviceClass) {
 		return (T) SERVICES.get(serviceClass);
 	}
 
-	public final synchronized void add(Service service) {
+	public static synchronized void add(Service service) {
 		Class<? extends Service> serviceClass = service.getClass();
 		Service existingService = SERVICES.get(serviceClass);
 		if (existingService != null) {

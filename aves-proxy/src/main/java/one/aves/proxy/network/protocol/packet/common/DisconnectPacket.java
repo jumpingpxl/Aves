@@ -1,13 +1,15 @@
-package one.aves.proxy.network.protocol.packet.login;
+package one.aves.proxy.network.protocol.packet.common;
 
 import com.google.gson.JsonObject;
 import one.aves.api.component.Component;
 import one.aves.api.component.ComponentParser;
 import one.aves.api.connection.ProtocolVersion;
+import one.aves.proxy.network.handler.NetworkHandler;
 import one.aves.proxy.network.protocol.ByteBuffer;
 import one.aves.proxy.network.protocol.Direction;
+import one.aves.proxy.network.protocol.NettyPacket;
 
-public class DisconnectPacket implements LoginNettyPacket {
+public class DisconnectPacket implements NettyPacket<NetworkHandler> {
 
 	private final Component component;
 

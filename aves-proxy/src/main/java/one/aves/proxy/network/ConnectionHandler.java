@@ -8,6 +8,7 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.WriteBufferWaterMark;
 import io.netty.channel.epoll.EpollChannelOption;
 import one.aves.api.console.ConsoleLogger;
+import one.aves.proxy.Aves;
 
 import java.net.InetSocketAddress;
 
@@ -22,8 +23,8 @@ public class ConnectionHandler {
 	private final EventLoopGroup bossGroup;
 	private final EventLoopGroup workerGroup;
 
-	public ConnectionHandler() {
-		serverChannelInitializer = new ServerChannelInitializer();
+	public ConnectionHandler(Aves aves) {
+		serverChannelInitializer = new ServerChannelInitializer(aves);
 		transportType = TransportType.bestType();
 		bossGroup = transportType.createEventLoopGroup(TransportType.Type.BOSS);
 		workerGroup = transportType.createEventLoopGroup(TransportType.Type.WORKER);

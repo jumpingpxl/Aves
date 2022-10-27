@@ -7,8 +7,9 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.util.AttributeKey;
 import one.aves.proxy.network.protocol.Direction;
 import one.aves.proxy.network.protocol.NettyPacket;
+import one.aves.proxy.network.protocol.packet.common.DisconnectPacket;
 import one.aves.proxy.network.protocol.packet.handshake.HandshakePacket;
-import one.aves.proxy.network.protocol.packet.login.DisconnectPacket;
+import one.aves.proxy.network.protocol.packet.login.EncryptionPacket;
 import one.aves.proxy.network.protocol.packet.login.LoginPacket;
 import one.aves.proxy.network.protocol.packet.status.PingPongPacket;
 import one.aves.proxy.network.protocol.packet.status.StatusPacket;
@@ -30,6 +31,8 @@ public enum ConnectionState {
 	LOGIN(2, state -> {
 		state.registerServerBound(0x00, LoginPacket.class);
 		state.registerClientBound(0x00, DisconnectPacket.class);
+		state.registerClientBound(0x01, EncryptionPacket.class);
+		state.registerServerBound(0x01, EncryptionPacket.class);
 	}),
 	PLAY(0, state -> {
 

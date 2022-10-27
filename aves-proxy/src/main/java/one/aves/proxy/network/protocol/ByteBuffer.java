@@ -47,6 +47,25 @@ public class ByteBuffer {
 		return string;
 	}
 
+	public byte[] readByteArray() {
+		byte[] bytes = new byte[this.readVarInt()];
+		this.readBytes(bytes);
+		return bytes;
+	}
+
+	public void readBytes(byte[] bytes) {
+		byteBuf.readBytes(bytes);
+	}
+
+	public void writeByteArray(byte[] array) {
+		this.writeVarInt(array.length);
+		this.writeBytes(array);
+	}
+
+	public void writeBytes(byte... bytes) {
+		byteBuf.writeBytes(bytes);
+	}
+
 	public void writeVarInt(int input) {
 		while ((input & -128) != 0) {
 			writeByte(input & 127 | 128);
@@ -84,16 +103,16 @@ public class ByteBuffer {
 		return this.byteBuf.readLong();
 	}
 
-	public ByteBuf writeLong(long value) {
-		return this.byteBuf.writeLong(value);
+	public void writeLong(long value) {
+		this.byteBuf.writeLong(value);
 	}
 
 	public int readableBytes() {
 		return this.byteBuf.readableBytes();
 	}
 
-	public ByteBuf ensureWritable(int value) {
-		return this.byteBuf.ensureWritable(value);
+	public void ensureWritable(int value) {
+		this.byteBuf.ensureWritable(value);
 	}
 }
 

@@ -5,6 +5,7 @@ import io.netty.channel.ChannelException;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.handler.timeout.ReadTimeoutHandler;
+import one.aves.proxy.Aves;
 import one.aves.proxy.network.channel.MessagePrepender;
 import one.aves.proxy.network.channel.MessageSplitter;
 import one.aves.proxy.network.channel.PacketDecoder;
@@ -14,6 +15,12 @@ import one.aves.proxy.network.protocol.Direction;
 
 public class ServerChannelInitializer extends ChannelInitializer<Channel> {
 
+	private final Aves aves;
+
+	public ServerChannelInitializer(Aves aves) {
+		this.aves = aves;
+	}
+
 	@Override
 	protected void initChannel(Channel channel) {
 		try {
@@ -22,7 +29,7 @@ public class ServerChannelInitializer extends ChannelInitializer<Channel> {
 			e.printStackTrace();
 		}
 
-		MinecraftConnection channelHandler = new MinecraftConnection(Direction.SERVERBOUND);
+		MinecraftConnection channelHandler = new MinecraftConnection(this.aves, Direction.SERVERBOUND);
 		channelHandler.setNetworkHandler(new NetworkHandshakeHandler(channelHandler));
 		channel.pipeline().addLast("timeout", new ReadTimeoutHandler(30)).addLast("splitter",
 				new MessageSplitter()).addLast("decoder", new PacketDecoder(Direction.SERVERBOUND)).addLast(

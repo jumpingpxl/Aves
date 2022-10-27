@@ -128,10 +128,18 @@ public class Component {
 	}
 
 	public List<TextDecoration> getDecorations() {
+		if (this.decorations == null) {
+			return null;
+		}
+
 		return Collections.unmodifiableList(decorations);
 	}
 
 	public List<Component> getChildren() {
+		if (this.children == null) {
+			return null;
+		}
+
 		return Collections.unmodifiableList(children);
 	}
 

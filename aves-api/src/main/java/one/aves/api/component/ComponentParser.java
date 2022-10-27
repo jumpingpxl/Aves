@@ -8,37 +8,22 @@ import java.util.List;
 
 public class ComponentParser {
 
+	private static final char LEGACY_COLOR_CHARACTER = '§';
+
 	private ComponentParser() {
 
 	}
 
-	public static JsonObject toJson(Component component, ProtocolVersion protocolVersion) {
-		return toJson(component, protocolVersion, false);
-	}
-
-	private static JsonObject toJson(Component component, ProtocolVersion protocolVersion,
-	                                 boolean bare) {
+	public static JsonObject toJson(Component component, ProtocolVersion protocolVersion,
+	                                boolean onlyText) {
 		JsonObject object = new JsonObject();
-		object.addProperty("text", component.getText());
-
-		TextColor color = component.getColor();
-		if (color != null) {
-			object.addProperty("color", color.get());
+		if (protocolVersion.isBefore(ProtocolVersion.MINECRAFT_1_8_0)) {
+			applyAncientText(object, component);
+		} else {
+			applyText(object, component);
 		}
 
-		Font font = component.getFont();
-		if (font != null) {
-			object.addProperty("font", font.getActualName());
-		}
-
-		List<TextDecoration> decorations = component.getDecorations();
-		if (decorations != null) {
-			for (TextDecoration decoration : decorations) {
-				object.addProperty(decoration.getActualName(), true);
-			}
-		}
-
-		if (!bare) {
+		if (!onlyText) {
 			ClickEvent clickEvent = component.getClickEvent();
 			if (clickEvent != null && !clickEvent.getJsonPrimitive().isJsonNull()) {
 				JsonObject clickEventObject = new JsonObject();
@@ -51,8 +36,7 @@ public class ComponentParser {
 			if (hoverEvent != null) {
 				JsonObject hoverEventObject = new JsonObject();
 				HoverEvent.Action action = hoverEvent.getAction();
-				if (action == HoverEvent.Action.SHOW_ACHIEVEMENT && protocolVersion.isAfter(
-						ProtocolVersion.MINECRAFT_1_12_0)) {
+				if (action == HoverEvent.Action.SHOW_ACHIEVEMENT && protocolVersion.isAfter(ProtocolVersion.MINECRAFT_1_12_0)) {
 					action = HoverEvent.Action.SHOW_TEXT;
 				}
 
@@ -72,12 +56,54 @@ public class ComponentParser {
 		if (children != null && !children.isEmpty()) {
 			JsonArray childrenArray = new JsonArray();
 			for (Component child : children) {
-				childrenArray.add(toJson(child, protocolVersion, bare));
+				childrenArray.add(toJson(child, protocolVersion, onlyText));
 			}
 
 			object.add("extra", childrenArray);
 		}
 
 		return object;
+	}
+
+	private static void applyAncientText(JsonObject object, Component component) {
+		StringBuilder stringBuilder = new StringBuilder();
+		if (component.getColor() != null) {
+			stringBuilder.append(LEGACY_COLOR_CHARACTER);
+			Character legacyCharacter = component.getColor().getLegacyCharacter();
+			stringBuilder.append(
+					legacyCharacter == null ? TextColor.WHITE.getLegacyCharacter() : legacyCharacter);
+		}
+
+		List<TextDecoration> decorations = component.getDecorations();
+		if (decorations != null) {
+			for (TextDecoration decoration : decorations) {
+				stringBuilder.append(LEGACY_COLOR_CHARACTER);
+				stringBuilder.append(decoration.getLegacyCharacter());
+			}
+		}
+
+		stringBuilder.append(component.getText());
+		object.addProperty("text", stringBuilder.toString());
+	}
+
+	private static void applyText(JsonObject object, Component component) {
+		object.addProperty("text", component.getText());
+
+		TextColor color = component.getColor();
+		if (color != null) {
+			object.addProperty("color", color.get());
+		}
+
+		Font font = component.getFont();
+		if (font != null) {
+			object.addProperty("font", font.getActualName());
+		}
+
+		List<TextDecoration> decorations = component.getDecorations();
+		if (decorations != null) {
+			for (TextDecoration decoration : decorations) {
+				object.addProperty(decoration.getActualName(), true);
+			}
+		}
 	}
 }

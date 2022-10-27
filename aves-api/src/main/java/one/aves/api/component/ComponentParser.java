@@ -17,7 +17,7 @@ public class ComponentParser {
 	public static JsonObject toJson(Component component, ProtocolVersion protocolVersion,
 	                                boolean onlyText) {
 		JsonObject object = new JsonObject();
-		if (protocolVersion.isBefore(ProtocolVersion.MINECRAFT_1_8_0)) {
+		if (protocolVersion.isBefore(ProtocolVersion.MC_1_8_0)) {
 			applyAncientText(object, component);
 		} else {
 			applyText(object, component);
@@ -36,7 +36,8 @@ public class ComponentParser {
 			if (hoverEvent != null) {
 				JsonObject hoverEventObject = new JsonObject();
 				HoverEvent.Action action = hoverEvent.getAction();
-				if (action == HoverEvent.Action.SHOW_ACHIEVEMENT && protocolVersion.isAfter(ProtocolVersion.MINECRAFT_1_12_0)) {
+				if (action == HoverEvent.Action.SHOW_ACHIEVEMENT && protocolVersion.isAfter(
+						ProtocolVersion.MC_1_12_0)) {
 					action = HoverEvent.Action.SHOW_TEXT;
 				}
 

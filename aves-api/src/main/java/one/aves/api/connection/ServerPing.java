@@ -57,7 +57,7 @@ public class ServerPing {
 		}
 
 		statusObject.add("players", playersObject);
-		if (protocolVersion.getProtocol() >= ProtocolVersion.MINECRAFT_1_16_0.getProtocol()) {
+		if (protocolVersion.getProtocol() >= ProtocolVersion.MC_1_16_0.getProtocol()) {
 			JsonObject descriptionObject = new JsonObject();
 			descriptionObject.addProperty("text", description);
 			statusObject.add("description", descriptionObject);

@@ -20,6 +20,7 @@ public class NetworkHandshakeHandler implements NetworkHandler {
 		if (nextState == ConnectionState.LOGIN.getId()) {
 			LOGGER.printInfo("Client requested login");
 			this.connection.setConnectionState(ConnectionState.LOGIN);
+			this.connection.setNetworkHandler(new NetworkLoginHandler(this.connection));
 			return;
 		}
 

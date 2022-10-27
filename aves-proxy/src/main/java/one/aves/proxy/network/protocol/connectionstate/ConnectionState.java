@@ -8,6 +8,8 @@ import io.netty.util.AttributeKey;
 import one.aves.proxy.network.protocol.Direction;
 import one.aves.proxy.network.protocol.NettyPacket;
 import one.aves.proxy.network.protocol.packet.handshake.HandshakePacket;
+import one.aves.proxy.network.protocol.packet.login.DisconnectPacket;
+import one.aves.proxy.network.protocol.packet.login.LoginPacket;
 import one.aves.proxy.network.protocol.packet.status.PingPongPacket;
 import one.aves.proxy.network.protocol.packet.status.StatusPacket;
 
@@ -26,7 +28,8 @@ public enum ConnectionState {
 		state.registerClientBound(0x01, PingPongPacket.class);
 	}),
 	LOGIN(2, state -> {
-
+		state.registerServerBound(0x00, LoginPacket.class);
+		state.registerClientBound(0x00, DisconnectPacket.class);
 	}),
 	PLAY(0, state -> {
 

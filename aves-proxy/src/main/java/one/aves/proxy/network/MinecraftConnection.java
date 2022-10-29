@@ -8,6 +8,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
+import one.aves.api.connection.GameProfile;
 import one.aves.api.connection.ProtocolVersion;
 import one.aves.api.console.ConsoleLogger;
 import one.aves.proxy.Aves;
@@ -37,6 +38,7 @@ public class MinecraftConnection extends SimpleChannelInboundHandler<NettyPacket
 
 	private NetworkHandler networkHandler;
 	private boolean encrypted;
+	private GameProfile gameProfile;
 
 	public MinecraftConnection(Aves aves, Direction direction) {
 		this.aves = aves;
@@ -172,7 +174,7 @@ public class MinecraftConnection extends SimpleChannelInboundHandler<NettyPacket
 	}
 
 	public Aves aves() {
-		return aves;
+		return this.aves;
 	}
 
 	public void enableEncryption(SecretKey secretKey) {
@@ -181,6 +183,14 @@ public class MinecraftConnection extends SimpleChannelInboundHandler<NettyPacket
 				new EncryptionDecoder(EncryptionHelper.createNetCipherInstance(2, secretKey)));
 		this.channel.pipeline().addBefore("prepender", "encrypt",
 				new EncryptionEncoder(EncryptionHelper.createNetCipherInstance(1, secretKey)));
+	}
+
+	public void updateGameProfile(GameProfile gameProfile) {
+		this.gameProfile = gameProfile;
+	}
+
+	public GameProfile getGameProfile() {
+		return this.gameProfile;
 	}
 
 	static class InboundHandlerTuplePacketListener {

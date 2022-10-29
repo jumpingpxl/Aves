@@ -8,6 +8,8 @@ import java.util.Set;
 
 public class ProtocolVersion {
 
+	private static final Set<ProtocolVersion> VALUES = Sets.newHashSet();
+
 	public static final ProtocolVersion UNKNOWN = new ProtocolVersion(-1, "unknown");
 	public static final ProtocolVersion MC_1_7_2 = new ProtocolVersion(4, "1.7.2", "1.7.3", "1.7.4",
 			"1.7.5");
@@ -48,7 +50,6 @@ public class ProtocolVersion {
 	public static final ProtocolVersion MC_1_18_2 = new ProtocolVersion(758, "1.18.2");
 	public static final ProtocolVersion MC_1_19_0 = new ProtocolVersion(759, "1.19");
 	public static final ProtocolVersion MC_1_19_1 = new ProtocolVersion(760, "1.19.1", "1.19.2");
-	private static final Set<ProtocolVersion> VALUES = Sets.newHashSet();
 	private static final int SNAPSHOT_OFFSET = 0x40000000;
 
 	public static final AttributeKey<ProtocolVersion> ATTRIBUTE_KEY = AttributeKey.valueOf(
@@ -74,11 +75,11 @@ public class ProtocolVersion {
 	}
 
 	public int getProtocol() {
-		return protocol;
+		return this.protocol;
 	}
 
 	public String[] getNames() {
-		return names;
+		return this.names;
 	}
 
 	public boolean isBefore(ProtocolVersion version) {
@@ -116,15 +117,15 @@ public class ProtocolVersion {
 	}
 
 	public boolean isUnknown() {
-		return unknown;
+		return this.unknown;
 	}
 
 	public boolean isSnapshot() {
-		if (!unknown) {
+		if (!this.unknown) {
 			return false;
 		}
 
-		if (snapshot) {
+		if (this.snapshot) {
 			return true;
 		}
 

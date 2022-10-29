@@ -7,11 +7,13 @@ import com.mojang.authlib.exceptions.InvalidCredentialsException;
 import com.mojang.authlib.minecraft.MinecraftSessionService;
 import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;
 import one.aves.api.util.result.Callback;
+import one.aves.proxy.connection.DefaultGameProfile;
 
 import javax.crypto.SecretKey;
 import java.math.BigInteger;
 import java.net.Proxy;
 import java.security.PublicKey;
+import java.util.HashMap;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -29,10 +31,8 @@ public class UserAuthenticator {
 		this.sessionService = this.authenticationService.createMinecraftSessionService();
 	}
 
-	private void authenticate(String serverId, String userName, PublicKey publicKey,
-	                          SecretKey secretKey, Callback<GameProfile> callback)
-			throws AuthenticationException {
-
+	public void authenticate(String serverId, String userName, PublicKey publicKey,
+	                         SecretKey secretKey, Callback<DefaultGameProfile> callback) {
 		byte[] serverIdHashBytes = EncryptionHelper.getServerIdHash(serverId, publicKey, secretKey);
 		if (serverIdHashBytes == null) {
 			callback.acceptException(new AuthenticationException("Could not generate server id hash!"));
@@ -49,7 +49,7 @@ public class UserAuthenticator {
 							new GameProfile(null, userName), serverIdHash, null);
 				} catch (AuthenticationUnavailableException e) {
 					callback.acceptException(new AuthenticationUnavailableException(
-							"Authentication servers are down. Please try " + "again later, sorry!"));
+							"Authentication servers are down. Please try again later, sorry!"));
 					return;
 				}
 
@@ -58,7 +58,9 @@ public class UserAuthenticator {
 					return;
 				}
 
-				callback.acceptRaw(gameProfile);
+				DefaultGameProfile profile = new DefaultGameProfile(gameProfile.getId(),
+						gameProfile.getName(), new HashMap<>());
+				callback.acceptRaw(profile);
 			}
 		}.start();
 	}

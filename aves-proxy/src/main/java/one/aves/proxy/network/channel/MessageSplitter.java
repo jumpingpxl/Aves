@@ -5,7 +5,8 @@ import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import io.netty.handler.codec.CorruptedFrameException;
-import one.aves.proxy.network.protocol.ByteBuffer;
+import one.aves.api.network.ByteBuffer;
+import one.aves.proxy.network.DefaultByteBuffer;
 
 import java.util.List;
 
@@ -27,7 +28,7 @@ public class MessageSplitter extends ByteToMessageDecoder {
 				continue;
 			}
 
-			ByteBuffer buffer = ByteBuffer.of(Unpooled.wrappedBuffer(bytes));
+			ByteBuffer buffer = DefaultByteBuffer.of(Unpooled.wrappedBuffer(bytes));
 			try {
 				int length = buffer.readVarInt();
 				if (byteBuf.readableBytes() >= length) {

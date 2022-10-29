@@ -16,15 +16,15 @@ public class Lazy<T> {
 	}
 
 	public T get() {
-		if (value == null) {
-			value = supplier.get();
+		if (this.value == null) {
+			this.value = this.supplier.get();
 		}
 
-		return value;
+		return this.value;
 	}
 
 	public T getFromSupplier() {
-		return supplier.get();
+		return this.supplier.get();
 	}
 
 	public void reset() {

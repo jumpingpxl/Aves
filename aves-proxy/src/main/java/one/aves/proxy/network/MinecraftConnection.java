@@ -8,23 +8,23 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
-import one.aves.api.connection.GameProfile;
-import one.aves.api.connection.ProtocolVersion;
 import one.aves.api.console.ConsoleLogger;
+import one.aves.api.network.Direction;
+import one.aves.api.network.NetworkHandler;
+import one.aves.api.network.ProtocolVersion;
+import one.aves.api.network.connection.ConnectionState;
+import one.aves.api.network.connection.GameProfile;
+import one.aves.api.network.packet.Packet;
 import one.aves.proxy.DefaultAves;
 import one.aves.proxy.network.encryption.EncryptionDecoder;
 import one.aves.proxy.network.encryption.EncryptionEncoder;
-import one.aves.proxy.network.handler.NetworkHandler;
-import one.aves.proxy.network.protocol.Direction;
-import one.aves.proxy.network.protocol.NettyPacket;
-import one.aves.proxy.network.protocol.connectionstate.ConnectionState;
 import one.aves.proxy.util.EncryptionHelper;
 
 import javax.crypto.SecretKey;
 import java.util.Queue;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-public class MinecraftConnection extends SimpleChannelInboundHandler<NettyPacket> {
+public class MinecraftConnection extends SimpleChannelInboundHandler<Packet> {
 
 	private static final ConsoleLogger LOGGER = ConsoleLogger.of(MinecraftConnection.class);
 
@@ -48,17 +48,16 @@ public class MinecraftConnection extends SimpleChannelInboundHandler<NettyPacket
 	}
 
 	@Override
-	protected void channelRead0(ChannelHandlerContext channelHandlerContext,
-	                            NettyPacket nettyPacket) {
+	protected void channelRead0(ChannelHandlerContext channelHandlerContext, Packet packet) {
 		if (!this.channel.isOpen()) {
 			return;
 		}
 
 		try {
-			nettyPacket.handle(this.networkHandler);
+			packet.handle(this.networkHandler);
 		} catch (Exception e) {
 			LOGGER.printException("Error while handling packet %s", e,
-					nettyPacket.getClass().getSimpleName());
+					packet.getClass().getSimpleName());
 		}
 	}
 
@@ -69,11 +68,11 @@ public class MinecraftConnection extends SimpleChannelInboundHandler<NettyPacket
 		this.setConnectionState(ConnectionState.HANDSHAKE);
 	}
 
-	public void sendPacket(NettyPacket<?> nettyPacket) {
+	public void sendPacket(Packet<?> packet) {
 		if (!this.channel.isOpen()) {
 			this.readWriteLock.writeLock().lock();
 			try {
-				this.outboundPacketsQueue.add(new InboundHandlerTuplePacketListener(nettyPacket));
+				this.outboundPacketsQueue.add(new InboundHandlerTuplePacketListener(packet));
 			} finally {
 				this.readWriteLock.writeLock().unlock();
 			}
@@ -82,7 +81,7 @@ public class MinecraftConnection extends SimpleChannelInboundHandler<NettyPacket
 		}
 
 		this.flushOutboundQueue();
-		this.dispatchPacket(nettyPacket);
+		this.dispatchPacket(packet);
 	}
 
 	private void flushOutboundQueue() {
@@ -101,7 +100,7 @@ public class MinecraftConnection extends SimpleChannelInboundHandler<NettyPacket
 		}
 	}
 
-	private void dispatchPacket(NettyPacket<?> packet,
+	private void dispatchPacket(Packet<?> packet,
 	                            GenericFutureListener<? extends Future<? super Void>>... futureListeners) {
 		ConnectionState currentState = this.channel.attr(ConnectionState.ATTRIBUTE_KEY).get();
 		ConnectionState packetState = ConnectionState.fromPacket(packet.getClass());
@@ -201,10 +200,10 @@ public class MinecraftConnection extends SimpleChannelInboundHandler<NettyPacket
 
 	static class InboundHandlerTuplePacketListener {
 
-		private final NettyPacket packet;
+		private final Packet packet;
 		private final GenericFutureListener<? extends Future<? super Void>>[] futureListeners;
 
-		public InboundHandlerTuplePacketListener(NettyPacket inPacket,
+		public InboundHandlerTuplePacketListener(Packet inPacket,
 		                                         GenericFutureListener<? extends Future<? super Void>>... inFutureListeners) {
 			this.packet = inPacket;
 			this.futureListeners = inFutureListeners;

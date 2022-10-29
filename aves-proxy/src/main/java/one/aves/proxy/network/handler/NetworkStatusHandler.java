@@ -1,13 +1,14 @@
 package one.aves.proxy.network.handler;
 
-import one.aves.api.connection.ServerInfo;
 import one.aves.api.console.ConsoleLogger;
 import one.aves.api.event.events.network.ServerListPingEvent;
+import one.aves.api.network.NetworkHandler;
+import one.aves.api.network.connection.ServerInfo;
 import one.aves.proxy.network.MinecraftConnection;
-import one.aves.proxy.network.protocol.packet.status.clientbound.PongPacket;
-import one.aves.proxy.network.protocol.packet.status.clientbound.StatusResponsePacket;
-import one.aves.proxy.network.protocol.packet.status.serverbound.PingPacket;
-import one.aves.proxy.network.protocol.packet.status.serverbound.StatusRequestPacket;
+import one.aves.proxy.network.packet.status.clientbound.PongPacket;
+import one.aves.proxy.network.packet.status.clientbound.StatusResponsePacket;
+import one.aves.proxy.network.packet.status.serverbound.PingPacket;
+import one.aves.proxy.network.packet.status.serverbound.StatusRequestPacket;
 
 public class NetworkStatusHandler implements NetworkHandler {
 

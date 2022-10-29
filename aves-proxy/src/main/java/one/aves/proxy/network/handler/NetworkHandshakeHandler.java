@@ -1,9 +1,10 @@
 package one.aves.proxy.network.handler;
 
 import one.aves.api.console.ConsoleLogger;
+import one.aves.api.network.NetworkHandler;
+import one.aves.api.network.connection.ConnectionState;
 import one.aves.proxy.network.MinecraftConnection;
-import one.aves.proxy.network.protocol.connectionstate.ConnectionState;
-import one.aves.proxy.network.protocol.packet.handshake.serverbound.HandshakePacket;
+import one.aves.proxy.network.packet.serverbound.HandshakePacket;
 
 public class NetworkHandshakeHandler implements NetworkHandler {
 

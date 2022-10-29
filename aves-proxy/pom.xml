@@ -28,7 +28,6 @@
       <groupId>one.aves</groupId>
       <artifactId>aves-api</artifactId>
       <version>0.0.1-SNAPSHOT</version>
-      <scope>compile</scope>
     </dependency>
     <!-- https://mvnrepository.com/artifact/io.netty/netty-all -->
     <dependency>
@@ -41,7 +40,6 @@
       <groupId>com.mojang</groupId>
       <artifactId>authlib</artifactId>
       <version>3.11.50</version>
-      <scope>compile</scope>
     </dependency>
   </dependencies>
 </project>

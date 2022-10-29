@@ -1,15 +1,16 @@
 package one.aves.proxy.network.handler;
 
 import one.aves.api.component.Component;
-import one.aves.api.connection.GameProfile;
 import one.aves.api.console.ConsoleLogger;
+import one.aves.api.network.NetworkHandler;
+import one.aves.api.network.connection.GameProfile;
 import one.aves.proxy.DefaultAves;
 import one.aves.proxy.connection.PrematureGameProfile;
 import one.aves.proxy.network.MinecraftConnection;
-import one.aves.proxy.network.protocol.packet.common.clientbound.DisconnectPacket;
-import one.aves.proxy.network.protocol.packet.login.clientbound.EncryptionRequestPacket;
-import one.aves.proxy.network.protocol.packet.login.serverbound.EncryptionResponsePacket;
-import one.aves.proxy.network.protocol.packet.login.serverbound.LoginStartPacket;
+import one.aves.proxy.network.packet.common.clientbound.DisconnectPacket;
+import one.aves.proxy.network.packet.login.clientbound.EncryptionRequestPacket;
+import one.aves.proxy.network.packet.login.serverbound.EncryptionResponsePacket;
+import one.aves.proxy.network.packet.login.serverbound.LoginStartPacket;
 
 import javax.crypto.SecretKey;
 import java.security.PrivateKey;

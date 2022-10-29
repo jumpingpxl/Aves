@@ -1,9 +1,9 @@
 package one.aves.api.event.events.network;
 
-import one.aves.api.connection.ProtocolVersion;
-import one.aves.api.connection.ServerInfo;
 import one.aves.api.event.DefaultCancellable;
 import one.aves.api.event.Event;
+import one.aves.api.network.ProtocolVersion;
+import one.aves.api.network.connection.ServerInfo;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;

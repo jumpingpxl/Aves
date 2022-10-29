@@ -2,7 +2,7 @@ package one.aves.api.component;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import one.aves.api.connection.ProtocolVersion;
+import one.aves.api.network.ProtocolVersion;
 
 import java.util.List;
 

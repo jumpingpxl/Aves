@@ -1,6 +1,6 @@
 package one.aves.proxy.connection;
 
-import one.aves.api.connection.GameProfile;
+import one.aves.api.network.connection.GameProfile;
 
 import java.util.Map;
 import java.util.UUID;

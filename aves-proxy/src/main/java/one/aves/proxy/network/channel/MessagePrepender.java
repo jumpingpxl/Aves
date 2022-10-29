@@ -3,7 +3,8 @@ package one.aves.proxy.network.channel;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
-import one.aves.proxy.network.protocol.ByteBuffer;
+import one.aves.api.network.ByteBuffer;
+import one.aves.proxy.network.DefaultByteBuffer;
 
 public class MessagePrepender extends MessageToByteEncoder<ByteBuf> {
 
@@ -16,7 +17,7 @@ public class MessagePrepender extends MessageToByteEncoder<ByteBuf> {
 			throw new IllegalArgumentException("unable to fit " + readableBytes + " into " + 3);
 		}
 
-		ByteBuffer byteBuffer = ByteBuffer.of(out);
+		ByteBuffer byteBuffer = DefaultByteBuffer.of(out);
 		byteBuffer.ensureWritable(size + readableBytes);
 		byteBuffer.writeVarInt(readableBytes);
 		out.writeBytes(byteBuf);

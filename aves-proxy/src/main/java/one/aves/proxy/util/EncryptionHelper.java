@@ -9,12 +9,14 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -51,6 +53,31 @@ public class EncryptionHelper {
 
 		LOGGER.printSevere("Public key reconstitute failed!");
 		return null;
+	}
+
+	public static byte[] getServerIdHash(String serverId, PublicKey publicKey, SecretKey secretKey) {
+		try {
+			return digestOperation("SHA-1", serverId.getBytes("ISO_8859_1"), secretKey.getEncoded(),
+					publicKey.getEncoded());
+		} catch (UnsupportedEncodingException unsupportedencodingexception) {
+			unsupportedencodingexception.printStackTrace();
+			return null;
+		}
+	}
+
+	private static byte[] digestOperation(String algorithm, byte[]... data) {
+		try {
+			MessageDigest messagedigest = MessageDigest.getInstance(algorithm);
+
+			for (byte[] abyte : data) {
+				messagedigest.update(abyte);
+			}
+
+			return messagedigest.digest();
+		} catch (NoSuchAlgorithmException nosuchalgorithmexception) {
+			nosuchalgorithmexception.printStackTrace();
+			return null;
+		}
 	}
 
 	public static SecretKey decryptSharedKey(PrivateKey key, byte[] secretKeyEncrypted) {

@@ -1,47 +1,35 @@
-package one.aves.proxy.network.protocol.packet.handshake;
+package one.aves.proxy.network.protocol.packet.handshake.serverbound;
 
 import one.aves.api.connection.ProtocolVersion;
 import one.aves.proxy.network.handler.NetworkHandshakeHandler;
 import one.aves.proxy.network.protocol.ByteBuffer;
 import one.aves.proxy.network.protocol.Direction;
 import one.aves.proxy.network.protocol.NettyPacket;
+import one.aves.proxy.network.protocol.connectionstate.ConnectionState;
 
 public class HandshakePacket implements NettyPacket<NetworkHandshakeHandler> {
 
 	private int protocol;
 	private String serverAddress;
 	private int serverPort;
-	private byte nextState;
+	private ConnectionState nextState;
 
 	private ProtocolVersion protocolVersion;
 
 	@Override
 	public void decode(ByteBuffer byteBuffer, Direction direction, ProtocolVersion protocol) {
-		try {
-			this.protocol = byteBuffer.readVarInt();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		try {
-			this.serverAddress = byteBuffer.readString();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		try {
-			this.serverPort = byteBuffer.readUnsignedShort();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		try {
-			this.nextState = byteBuffer.readByte();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		this.protocol = byteBuffer.readVarInt();
+		this.serverAddress = byteBuffer.readString();
+		this.serverPort = byteBuffer.readUnsignedShort();
+		this.nextState = ConnectionState.getById(byteBuffer.readVarInt());
 	}
 
 	@Override
 	public void encode(ByteBuffer byteBuffer, Direction direction, ProtocolVersion protocol) {
-
+		byteBuffer.writeVarInt(this.protocol);
+		byteBuffer.writeString(this.serverAddress);
+		byteBuffer.writeShort(this.serverPort);
+		byteBuffer.writeVarInt(this.nextState.getId());
 	}
 
 	@Override
@@ -50,7 +38,7 @@ public class HandshakePacket implements NettyPacket<NetworkHandshakeHandler> {
 	}
 
 	public int getProtocol() {
-		return protocol;
+		return this.protocol;
 	}
 
 	public ProtocolVersion getProtocolVersion() {
@@ -62,14 +50,14 @@ public class HandshakePacket implements NettyPacket<NetworkHandshakeHandler> {
 	}
 
 	public String getServerAddress() {
-		return serverAddress;
+		return this.serverAddress;
 	}
 
 	public int getServerPort() {
-		return serverPort;
+		return this.serverPort;
 	}
 
-	public byte getNextState() {
-		return nextState;
+	public ConnectionState nextState() {
+		return this.nextState;
 	}
 }

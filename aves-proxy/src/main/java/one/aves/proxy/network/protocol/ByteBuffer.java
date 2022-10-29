@@ -28,9 +28,9 @@ public class ByteBuffer {
 
 	public int readVarInt() {
 		int i = 0;
-		int maxRead = Math.min(5, byteBuf.readableBytes());
+		int maxRead = Math.min(5, this.byteBuf.readableBytes());
 		for (int j = 0; j < maxRead; j++) {
-			int k = byteBuf.readByte();
+			int k = this.byteBuf.readByte();
 			i |= (k & 0x7F) << j * 7;
 			if ((k & 0x80) != 128) {
 				return i;
@@ -41,9 +41,10 @@ public class ByteBuffer {
 	}
 
 	public String readString() {
-		int length = readVarInt();
-		String string = byteBuf.toString(byteBuf.readerIndex(), length, StandardCharsets.UTF_8);
-		byteBuf.skipBytes(length);
+		int length = this.readVarInt();
+		String string = this.byteBuf.toString(this.byteBuf.readerIndex(), length,
+				StandardCharsets.UTF_8);
+		this.byteBuf.skipBytes(length);
 		return string;
 	}
 
@@ -54,7 +55,11 @@ public class ByteBuffer {
 	}
 
 	public void readBytes(byte[] bytes) {
-		byteBuf.readBytes(bytes);
+		this.byteBuf.readBytes(bytes);
+	}
+
+	public void writeShort(int value) {
+		this.byteBuf.writeShort(value);
 	}
 
 	public void writeByteArray(byte[] array) {
@@ -63,36 +68,36 @@ public class ByteBuffer {
 	}
 
 	public void writeBytes(byte... bytes) {
-		byteBuf.writeBytes(bytes);
+		this.byteBuf.writeBytes(bytes);
 	}
 
 	public void writeVarInt(int input) {
 		while ((input & -128) != 0) {
-			writeByte(input & 127 | 128);
+			this.writeByte(input & 127 | 128);
 			input >>>= 7;
 		}
 
-		writeByte(input);
+		this.writeByte(input);
 	}
 
 	public void writeString(String input) {
 		byte[] bytes = input.getBytes(StandardCharsets.UTF_8);
-		writeVarInt(bytes.length);
+		this.writeVarInt(bytes.length);
 		for (byte b : bytes) {
-			writeByte(b);
+			this.writeByte(b);
 		}
 	}
 
-	private void writeByte(int i) {
-		byteBuf.writeByte(i);
+	public void writeByte(int i) {
+		this.byteBuf.writeByte(i);
 	}
 
 	public int readUnsignedShort() {
-		return byteBuf.readUnsignedShort();
+		return this.byteBuf.readUnsignedShort();
 	}
 
 	public byte readByte() {
-		return byteBuf.readByte();
+		return this.byteBuf.readByte();
 	}
 
 	public boolean release() {

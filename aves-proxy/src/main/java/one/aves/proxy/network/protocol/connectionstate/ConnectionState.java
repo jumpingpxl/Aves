@@ -7,12 +7,16 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.util.AttributeKey;
 import one.aves.proxy.network.protocol.Direction;
 import one.aves.proxy.network.protocol.NettyPacket;
-import one.aves.proxy.network.protocol.packet.common.DisconnectPacket;
-import one.aves.proxy.network.protocol.packet.handshake.HandshakePacket;
-import one.aves.proxy.network.protocol.packet.login.EncryptionPacket;
-import one.aves.proxy.network.protocol.packet.login.LoginPacket;
-import one.aves.proxy.network.protocol.packet.status.PingPongPacket;
-import one.aves.proxy.network.protocol.packet.status.StatusPacket;
+import one.aves.proxy.network.protocol.packet.common.clientbound.DisconnectPacket;
+import one.aves.proxy.network.protocol.packet.handshake.serverbound.HandshakePacket;
+import one.aves.proxy.network.protocol.packet.login.clientbound.EncryptionRequestPacket;
+import one.aves.proxy.network.protocol.packet.login.clientbound.LoginSuccessPacket;
+import one.aves.proxy.network.protocol.packet.login.serverbound.EncryptionResponsePacket;
+import one.aves.proxy.network.protocol.packet.login.serverbound.LoginStartPacket;
+import one.aves.proxy.network.protocol.packet.status.clientbound.PongPacket;
+import one.aves.proxy.network.protocol.packet.status.clientbound.StatusResponsePacket;
+import one.aves.proxy.network.protocol.packet.status.serverbound.PingPacket;
+import one.aves.proxy.network.protocol.packet.status.serverbound.StatusRequestPacket;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
@@ -23,16 +27,17 @@ public enum ConnectionState {
 		state.registerServerBound(0x00, HandshakePacket.class);
 	}),
 	STATUS(1, state -> {
-		state.registerServerBound(0x00, StatusPacket.class);
-		state.registerClientBound(0x00, StatusPacket.class);
-		state.registerServerBound(0x01, PingPongPacket.class);
-		state.registerClientBound(0x01, PingPongPacket.class);
+		state.registerServerBound(0x00, StatusRequestPacket.class);
+		state.registerClientBound(0x00, StatusResponsePacket.class);
+		state.registerServerBound(0x01, PingPacket.class);
+		state.registerClientBound(0x01, PongPacket.class);
 	}),
 	LOGIN(2, state -> {
-		state.registerServerBound(0x00, LoginPacket.class);
+		state.registerServerBound(0x00, LoginStartPacket.class);
 		state.registerClientBound(0x00, DisconnectPacket.class);
-		state.registerClientBound(0x01, EncryptionPacket.class);
-		state.registerServerBound(0x01, EncryptionPacket.class);
+		state.registerClientBound(0x01, EncryptionRequestPacket.class);
+		state.registerServerBound(0x01, EncryptionResponsePacket.class);
+		state.registerClientBound(0x02, LoginSuccessPacket.class);
 	}),
 	PLAY(0, state -> {
 
@@ -62,8 +67,27 @@ public enum ConnectionState {
 		return packetStates.get(packetClass);
 	}
 
-	public int getId() {
-		return id;
+	/**
+	 * Gets the connection state by id. this is done via a switch statement as {@link #values()}
+	 * is really inefficient and caching the values would result in every packet being registered
+	 * twice.
+	 *
+	 * @param id the state id
+	 * @return the connection state by id
+	 */
+	public static ConnectionState getById(int id) {
+		switch (id) {
+			case -1:
+				return HANDSHAKE;
+			case 0:
+				return PLAY;
+			case 1:
+				return STATUS;
+			case 2:
+				return LOGIN;
+			default:
+				throw new IllegalArgumentException("Unknown connection state id: " + id);
+		}
 	}
 
 	public NettyPacket<?> get(Direction direction, int packetId) {
@@ -103,30 +127,22 @@ public enum ConnectionState {
 		return integer;
 	}
 
+	public int getId() {
+		return this.id;
+	}
+
 	private ConnectionState registerClientBound(int packetId,
 	                                            Class<? extends NettyPacket<?>> packetClass) {
 		this.registerPacket(packetClass);
-		clientBound.put(packetId, packetClass);
+		this.clientBound.put(packetId, packetClass);
 		return this;
 	}
 
 	private ConnectionState registerServerBound(int packetId,
 	                                            Class<? extends NettyPacket<?>> packetClass) {
 		this.registerPacket(packetClass);
-		serverBound.put(packetId, packetClass);
+		this.serverBound.put(packetId, packetClass);
 		return this;
-	}
-
-	private BiMap<Integer, Class<? extends NettyPacket<?>>> getDirectionMap(Direction direction) {
-		if (direction == Direction.CLIENTBOUND) {
-			return clientBound;
-		}
-
-		if (direction == Direction.SERVERBOUND) {
-			return serverBound;
-		}
-
-		return null;
 	}
 
 	private void registerPacket(Class<? extends NettyPacket<?>> packetClass) {
@@ -135,5 +151,17 @@ public enum ConnectionState {
 		}
 
 		packetStates.put(packetClass, this);
+	}
+
+	private BiMap<Integer, Class<? extends NettyPacket<?>>> getDirectionMap(Direction direction) {
+		if (direction == Direction.CLIENTBOUND) {
+			return this.clientBound;
+		}
+
+		if (direction == Direction.SERVERBOUND) {
+			return this.serverBound;
+		}
+
+		return null;
 	}
 }

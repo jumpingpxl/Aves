@@ -1,34 +1,19 @@
-package one.aves.proxy.network.protocol.packet.login;
+package one.aves.proxy.network.protocol.packet.login.serverbound;
 
 import one.aves.api.connection.ProtocolVersion;
 import one.aves.proxy.network.handler.NetworkLoginHandler;
 import one.aves.proxy.network.protocol.ByteBuffer;
 import one.aves.proxy.network.protocol.Direction;
+import one.aves.proxy.network.protocol.NettyPacket;
 import one.aves.proxy.util.EncryptionHelper;
 
 import javax.crypto.SecretKey;
 import java.security.PrivateKey;
-import java.security.PublicKey;
 
-public class EncryptionPacket implements LoginNettyPacket {
+public class EncryptionResponsePacket implements NettyPacket<NetworkLoginHandler> {
 
-	//EncryptionRequest
-	private PublicKey publicKey;
-	private byte[] verifyToken;
-
-	//EncryptionResponse
 	private byte[] secretKeyEncrypted;
 	private byte[] verifyTokenEncrypted;
-
-	public EncryptionPacket() {
-		secretKeyEncrypted = new byte[0];
-		verifyTokenEncrypted = new byte[0];
-	}
-
-	public EncryptionPacket(PublicKey publicKey, byte[] verifyToken) {
-		this.publicKey = publicKey;
-		this.verifyToken = verifyToken;
-	}
 
 	@Override
 	public void decode(ByteBuffer byteBuffer, Direction direction, ProtocolVersion protocol) {
@@ -38,9 +23,8 @@ public class EncryptionPacket implements LoginNettyPacket {
 
 	@Override
 	public void encode(ByteBuffer byteBuffer, Direction direction, ProtocolVersion protocol) {
-		byteBuffer.writeString("");
-		byteBuffer.writeByteArray(publicKey.getEncoded());
-		byteBuffer.writeByteArray(verifyToken);
+		byteBuffer.writeByteArray(this.secretKeyEncrypted);
+		byteBuffer.writeByteArray(this.verifyTokenEncrypted);
 	}
 
 	@Override

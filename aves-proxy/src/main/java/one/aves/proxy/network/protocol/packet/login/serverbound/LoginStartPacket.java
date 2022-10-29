@@ -1,22 +1,23 @@
-package one.aves.proxy.network.protocol.packet.login;
+package one.aves.proxy.network.protocol.packet.login.serverbound;
 
 import one.aves.api.connection.ProtocolVersion;
 import one.aves.proxy.network.handler.NetworkLoginHandler;
 import one.aves.proxy.network.protocol.ByteBuffer;
 import one.aves.proxy.network.protocol.Direction;
+import one.aves.proxy.network.protocol.NettyPacket;
 
-public class LoginPacket implements LoginNettyPacket {
+public class LoginStartPacket implements NettyPacket<NetworkLoginHandler> {
 
-	private String username;
+	private String userName;
 
 	@Override
 	public void decode(ByteBuffer byteBuffer, Direction direction, ProtocolVersion protocol) {
-		this.username = byteBuffer.readString();
+		this.userName = byteBuffer.readString();
 	}
 
 	@Override
 	public void encode(ByteBuffer byteBuffer, Direction direction, ProtocolVersion protocol) {
-
+		byteBuffer.writeString(this.userName);
 	}
 
 	@Override
@@ -24,7 +25,7 @@ public class LoginPacket implements LoginNettyPacket {
 		networkHandler.handleLogin(this);
 	}
 
-	public String getUsername() {
-		return username;
+	public String getUserName() {
+		return this.userName;
 	}
 }

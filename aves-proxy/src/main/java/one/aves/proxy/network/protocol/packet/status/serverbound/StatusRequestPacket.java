@@ -1,22 +1,21 @@
-package one.aves.proxy.network.protocol.packet.status;
+package one.aves.proxy.network.protocol.packet.status.serverbound;
 
 import one.aves.api.connection.ProtocolVersion;
-import one.aves.api.connection.ServerPing;
 import one.aves.proxy.network.handler.NetworkStatusHandler;
 import one.aves.proxy.network.protocol.ByteBuffer;
 import one.aves.proxy.network.protocol.Direction;
+import one.aves.proxy.network.protocol.NettyPacket;
 
-public class StatusPacket implements StatusNettyPacket {
+public class StatusRequestPacket implements NettyPacket<NetworkStatusHandler> {
 
 	@Override
 	public void decode(ByteBuffer byteBuffer, Direction direction, ProtocolVersion protocol) {
-		//the server bound packet is empty
+		// the status request packet is empty
 	}
 
 	@Override
 	public void encode(ByteBuffer byteBuffer, Direction direction, ProtocolVersion protocol) {
-		byteBuffer.writeString(new ServerPing().toJsonString(protocol));
-		//byteBuffer.writeString(GsonFactory.serialize(GsonIdentifier.SERVER_INFO, new ServerPing()));
+		// the status request packet is empty
 	}
 
 	@Override

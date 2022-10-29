@@ -3,7 +3,7 @@ package one.aves.proxy.network.handler;
 import one.aves.api.console.ConsoleLogger;
 import one.aves.proxy.network.MinecraftConnection;
 import one.aves.proxy.network.protocol.connectionstate.ConnectionState;
-import one.aves.proxy.network.protocol.packet.handshake.HandshakePacket;
+import one.aves.proxy.network.protocol.packet.handshake.serverbound.HandshakePacket;
 
 public class NetworkHandshakeHandler implements NetworkHandler {
 
@@ -16,15 +16,15 @@ public class NetworkHandshakeHandler implements NetworkHandler {
 
 	public void handle(HandshakePacket packet) {
 		this.connection.setProtocolVersion(packet.getProtocolVersion());
-		byte nextState = packet.getNextState();
-		if (nextState == ConnectionState.LOGIN.getId()) {
+		ConnectionState nextState = packet.nextState();
+		if (nextState == ConnectionState.LOGIN) {
 			LOGGER.printInfo("Client requested login");
 			this.connection.setConnectionState(ConnectionState.LOGIN);
 			this.connection.setNetworkHandler(new NetworkLoginHandler(this.connection));
 			return;
 		}
 
-		if (nextState == ConnectionState.STATUS.getId()) {
+		if (nextState == ConnectionState.STATUS) {
 			LOGGER.printInfo("Client requested status");
 			this.connection.setConnectionState(ConnectionState.STATUS);
 			this.connection.setNetworkHandler(new NetworkStatusHandler(this.connection));

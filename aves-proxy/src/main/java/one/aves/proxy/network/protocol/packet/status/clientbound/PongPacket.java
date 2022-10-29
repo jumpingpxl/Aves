@@ -1,19 +1,17 @@
-package one.aves.proxy.network.protocol.packet.status;
+package one.aves.proxy.network.protocol.packet.status.clientbound;
 
 import one.aves.api.connection.ProtocolVersion;
 import one.aves.proxy.network.handler.NetworkStatusHandler;
 import one.aves.proxy.network.protocol.ByteBuffer;
 import one.aves.proxy.network.protocol.Direction;
+import one.aves.proxy.network.protocol.NettyPacket;
 
-public class PingPongPacket implements StatusNettyPacket {
+public class PongPacket implements NettyPacket<NetworkStatusHandler> {
 
-	private long clientTime;
+	private long clientTime = -1;
 
-	public PingPongPacket(long clientTime) {
+	public PongPacket(long clientTime) {
 		this.clientTime = clientTime;
-	}
-
-	public PingPongPacket() {
 	}
 
 	@Override
@@ -26,12 +24,7 @@ public class PingPongPacket implements StatusNettyPacket {
 		byteBuffer.writeLong(this.clientTime);
 	}
 
-	@Override
-	public void handle(NetworkStatusHandler networkHandler) {
-		networkHandler.handlePing(this);
-	}
-
 	public long getClientTime() {
-		return clientTime;
+		return this.clientTime;
 	}
 }

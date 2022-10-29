@@ -1,9 +1,11 @@
 package one.aves.proxy.network.handler;
 
 import one.aves.api.console.ConsoleLogger;
+import one.aves.proxy.Aves;
 import one.aves.proxy.network.MinecraftConnection;
-import one.aves.proxy.network.protocol.packet.login.EncryptionPacket;
-import one.aves.proxy.network.protocol.packet.login.LoginPacket;
+import one.aves.proxy.network.protocol.packet.login.clientbound.EncryptionRequestPacket;
+import one.aves.proxy.network.protocol.packet.login.serverbound.EncryptionResponsePacket;
+import one.aves.proxy.network.protocol.packet.login.serverbound.LoginStartPacket;
 
 import javax.crypto.SecretKey;
 import java.security.PrivateKey;
@@ -22,13 +24,15 @@ public class NetworkLoginHandler implements NetworkHandler {
 		new Random().nextBytes(this.verifyToken);
 	}
 
-	public void handleLogin(LoginPacket packet) {
-		LOGGER.printInfo("User %s requested login ", packet.getUsername());
+	public void handleLogin(LoginStartPacket packet) {
+		LOGGER.printInfo("User %s requested login ", packet.getUserName());
 
-		EncryptionPacket encryptionPacket = new EncryptionPacket(
-				this.connection.aves().getKeyPair().getPublic(), verifyToken);
+		Aves aves = this.connection.aves();
+		EncryptionRequestPacket encryptionPacket = new EncryptionRequestPacket(aves.getServerId(),
+				aves.getKeyPair().getPublic(), this.verifyToken);
 		this.connection.sendPacket(encryptionPacket);
 
+		// todo event
 		//Component component = Component.text("This server is running ").color(TextColor.GREEN);
 		//component.append(Component.text("Aves").color(TextColor.GOLD));
 		//component.append(Component.text("Cloud").color(TextColor.of(Color.pink)));
@@ -37,7 +41,7 @@ public class NetworkLoginHandler implements NetworkHandler {
 		//this.connection.sendPacket(new DisconnectPacket(component));
 	}
 
-	public void handleEncryptionResponse(EncryptionPacket packet) {
+	public void handleEncryptionResponse(EncryptionResponsePacket packet) {
 		LOGGER.printInfo("Encryption response received");
 		PrivateKey privatekey = this.connection.aves().getKeyPair().getPrivate();
 

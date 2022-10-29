@@ -1,4 +1,4 @@
-package one.aves.proxy.network.protocol.packet.common;
+package one.aves.proxy.network.protocol.packet.common.clientbound;
 
 import com.google.gson.JsonObject;
 import one.aves.api.component.Component;
@@ -19,12 +19,12 @@ public class DisconnectPacket implements NettyPacket<NetworkHandler> {
 
 	@Override
 	public void decode(ByteBuffer byteBuffer, Direction direction, ProtocolVersion protocol) {
-
+		//todo inverted component parsing
 	}
 
 	@Override
 	public void encode(ByteBuffer byteBuffer, Direction direction, ProtocolVersion protocol) {
-		JsonObject jsonObject = ComponentParser.toJson(component, protocol, true);
+		JsonObject jsonObject = ComponentParser.toJson(this.component, protocol, true);
 		byteBuffer.writeString(jsonObject.toString());
 	}
 }

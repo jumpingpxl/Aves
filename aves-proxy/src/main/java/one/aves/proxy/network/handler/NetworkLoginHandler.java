@@ -3,7 +3,7 @@ package one.aves.proxy.network.handler;
 import one.aves.api.component.Component;
 import one.aves.api.connection.GameProfile;
 import one.aves.api.console.ConsoleLogger;
-import one.aves.proxy.Aves;
+import one.aves.proxy.DefaultAves;
 import one.aves.proxy.connection.PrematureGameProfile;
 import one.aves.proxy.network.MinecraftConnection;
 import one.aves.proxy.network.protocol.packet.common.clientbound.DisconnectPacket;
@@ -32,7 +32,7 @@ public class NetworkLoginHandler implements NetworkHandler {
 		LOGGER.printInfo("User %s requested login ", packet.getUserName());
 		this.connection.updateGameProfile(new PrematureGameProfile(packet.getUserName()));
 
-		Aves aves = this.connection.aves();
+		DefaultAves aves = this.connection.aves();
 		EncryptionRequestPacket encryptionPacket = new EncryptionRequestPacket(aves.getServerId(),
 				aves.getKeyPair().getPublic(), this.verifyToken);
 		this.connection.sendPacket(encryptionPacket);
@@ -47,7 +47,7 @@ public class NetworkLoginHandler implements NetworkHandler {
 
 	public void handleEncryptionResponse(EncryptionResponsePacket packet) {
 		LOGGER.printInfo("Encryption response received");
-		Aves aves = this.connection.aves();
+		DefaultAves aves = this.connection.aves();
 		PrivateKey privatekey = aves.getKeyPair().getPrivate();
 
 		if (!Arrays.equals(this.verifyToken, packet.getVerifyToken(privatekey))) {

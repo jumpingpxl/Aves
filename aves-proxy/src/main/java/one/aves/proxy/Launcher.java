@@ -12,7 +12,7 @@ public class Launcher {
 		long startTime = System.currentTimeMillis();
 		LOGGER.printInfo("Starting Aves Proxy...");
 
-		new Aves().start();
+		new DefaultAves().start();
 
 		double bootTime = (System.currentTimeMillis() - startTime) / 1000D;
 		LOGGER.printInfo("Done in %s seconds!", new DecimalFormat("#.##").format(bootTime));

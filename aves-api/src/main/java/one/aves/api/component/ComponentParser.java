@@ -14,6 +14,17 @@ public class ComponentParser {
 
 	}
 
+	public static String toFormattedText(Component component) {
+		StringBuilder stringBuilder = new StringBuilder(getAncientText(component, true));
+		if (component.getChildren() != null) {
+			for (Component child : component.getChildren()) {
+				stringBuilder.append(toFormattedText(child));
+			}
+		}
+
+		return stringBuilder.toString();
+	}
+
 	public static JsonObject toJson(Component component, ProtocolVersion protocolVersion,
 	                                boolean onlyText) {
 		JsonObject object = new JsonObject();
@@ -67,24 +78,7 @@ public class ComponentParser {
 	}
 
 	private static void applyAncientText(JsonObject object, Component component) {
-		StringBuilder stringBuilder = new StringBuilder();
-		if (component.getColor() != null) {
-			stringBuilder.append(LEGACY_COLOR_CHARACTER);
-			Character legacyCharacter = component.getColor().getLegacyCharacter();
-			stringBuilder.append(
-					legacyCharacter == null ? TextColor.WHITE.getLegacyCharacter() : legacyCharacter);
-		}
-
-		List<TextDecoration> decorations = component.getDecorations();
-		if (decorations != null) {
-			for (TextDecoration decoration : decorations) {
-				stringBuilder.append(LEGACY_COLOR_CHARACTER);
-				stringBuilder.append(decoration.getLegacyCharacter());
-			}
-		}
-
-		stringBuilder.append(component.getText());
-		object.addProperty("text", stringBuilder.toString());
+		object.addProperty("text", getAncientText(component, true));
 	}
 
 	private static void applyText(JsonObject object, Component component) {
@@ -106,5 +100,30 @@ public class ComponentParser {
 				object.addProperty(decoration.getActualName(), true);
 			}
 		}
+	}
+
+	private static String getAncientText(Component component, boolean formatting) {
+		if (!formatting) {
+			return component.getText();
+		}
+
+		StringBuilder stringBuilder = new StringBuilder();
+		if (component.getColor() != null) {
+			stringBuilder.append(LEGACY_COLOR_CHARACTER);
+			Character legacyCharacter = component.getColor().getLegacyCharacter();
+			stringBuilder.append(
+					legacyCharacter == null ? TextColor.WHITE.getLegacyCharacter() : legacyCharacter);
+		}
+
+		List<TextDecoration> decorations = component.getDecorations();
+		if (decorations != null) {
+			for (TextDecoration decoration : decorations) {
+				stringBuilder.append(LEGACY_COLOR_CHARACTER);
+				stringBuilder.append(decoration.getLegacyCharacter());
+			}
+		}
+
+		stringBuilder.append(component.getText());
+		return stringBuilder.toString();
 	}
 }

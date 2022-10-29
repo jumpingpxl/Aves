@@ -1,7 +1,10 @@
 package one.aves.proxy;
 
-import one.aves.api.AvesServer;
-import one.aves.api.service.Service;
+import one.aves.api.Aves;
+import one.aves.api.event.EventService;
+import one.aves.api.service.ServiceProvider;
+import one.aves.proxy.event.DefaultEventService;
+import one.aves.proxy.event.TestListener;
 import one.aves.proxy.network.ConnectionHandler;
 import one.aves.proxy.util.EncryptionHelper;
 import one.aves.proxy.util.UserAuthenticator;
@@ -9,22 +12,27 @@ import one.aves.proxy.util.UserAuthenticator;
 import java.net.InetSocketAddress;
 import java.security.KeyPair;
 
-public class Aves extends AvesServer implements Service {
+public class DefaultAves extends Aves {
 
 	private final ConnectionHandler connectionHandler;
 	private final KeyPair keyPair;
 	private final UserAuthenticator userAuthenticator;
+	private final EventService eventService;
 	private final String serverId;
 
-	protected Aves() {
-		add(this);
+	protected DefaultAves() {
+		ServiceProvider.register(Aves.class, this);
 
 		this.serverId = "";
 
 		this.keyPair = EncryptionHelper.generateKeyPair();
 		this.userAuthenticator = new UserAuthenticator();
 
+		this.eventService = new DefaultEventService();
+
 		this.connectionHandler = new ConnectionHandler(this);
+
+		this.eventService.registerListener(new TestListener());
 	}
 
 	protected void start() {
@@ -41,5 +49,9 @@ public class Aves extends AvesServer implements Service {
 
 	public UserAuthenticator userAuthenticator() {
 		return this.userAuthenticator;
+	}
+
+	public EventService eventService() {
+		return this.eventService;
 	}
 }

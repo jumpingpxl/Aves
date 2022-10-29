@@ -5,7 +5,7 @@ import io.netty.channel.ChannelException;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.handler.timeout.ReadTimeoutHandler;
-import one.aves.proxy.Aves;
+import one.aves.proxy.DefaultAves;
 import one.aves.proxy.network.channel.MessagePrepender;
 import one.aves.proxy.network.channel.MessageSplitter;
 import one.aves.proxy.network.channel.PacketDecoder;
@@ -15,9 +15,9 @@ import one.aves.proxy.network.protocol.Direction;
 
 public class ServerChannelInitializer extends ChannelInitializer<Channel> {
 
-	private final Aves aves;
+	private final DefaultAves aves;
 
-	public ServerChannelInitializer(Aves aves) {
+	public ServerChannelInitializer(DefaultAves aves) {
 		this.aves = aves;
 	}
 

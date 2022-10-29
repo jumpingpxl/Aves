@@ -3,6 +3,8 @@ package one.aves.api.connection;
 import com.google.common.base.Preconditions;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import one.aves.api.component.Component;
+import one.aves.api.component.ComponentParser;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -15,38 +17,98 @@ import java.util.Base64;
 import java.util.Objects;
 import java.util.UUID;
 
-public class ServerPing {
+public class ServerInfo {
 
-	private final String versionName;
-	private final int versionProtocol;
+	private String versionName;
+	private int versionProtocol;
 
-	private final int maxPlayers;
-	private final int onlinePlayers;
-	private final String description;
+	private int maxPlayers;
+	private int onlinePlayers;
+	private Component description;
 	private String[] playerSample;
 	private Favicon favicon;
 
-	public ServerPing() {
-		versionName = "Test";
-		versionProtocol = -1;
-		maxPlayers = 1337;
-		onlinePlayers = 69;
-		description = "Hello, I am Aves.";
+	public ServerInfo() {
+		this.versionName = "Test";
+		this.versionProtocol = -1;
+		this.maxPlayers = 1337;
+		this.onlinePlayers = 69;
+		this.description = Component.text("Hello, I am Aves.");
+	}
+
+	public String getVersionName() {
+		return this.versionName;
+	}
+
+	public void setVersionName(String versionName) {
+		this.versionName = versionName;
+	}
+
+	public int getVersionProtocol() {
+		return this.versionProtocol;
+	}
+
+	public void setVersionProtocol(int versionProtocol) {
+		this.versionProtocol = versionProtocol;
+	}
+
+	public int getMaxPlayers() {
+		return this.maxPlayers;
+	}
+
+	public void setMaxPlayers(int maxPlayers) {
+		this.maxPlayers = maxPlayers;
+	}
+
+	public int getOnlinePlayers() {
+		return this.onlinePlayers;
+	}
+
+	public void setOnlinePlayers(int onlinePlayers) {
+		this.onlinePlayers = onlinePlayers;
+	}
+
+	public Component getDescription() {
+		return this.description;
+	}
+
+	public void setDescription(String description) {
+		this.description = Component.text(description);
+	}
+
+	public void setDescription(Component component) {
+		this.description = component;
+	}
+
+	public String[] getPlayerSample() {
+		return this.playerSample;
+	}
+
+	public void setPlayerSample(String[] playerSample) {
+		this.playerSample = playerSample;
+	}
+
+	public Favicon getFavicon() {
+		return this.favicon;
+	}
+
+	public void setFavicon(Favicon favicon) {
+		this.favicon = favicon;
 	}
 
 	public String toJsonString(ProtocolVersion protocolVersion) {
 		JsonObject statusObject = new JsonObject();
 		JsonObject versionObject = new JsonObject();
-		versionObject.addProperty("name", versionName);
+		versionObject.addProperty("name", this.versionName);
 		versionObject.addProperty("protocol",
-				versionProtocol == -1 ? protocolVersion.getProtocol() : versionProtocol);
+				this.versionProtocol == -1 ? protocolVersion.getProtocol() : this.versionProtocol);
 		statusObject.add("version", versionObject);
 		JsonObject playersObject = new JsonObject();
-		playersObject.addProperty("max", maxPlayers);
-		playersObject.addProperty("online", onlinePlayers);
-		if (Objects.nonNull(playerSample)) {
+		playersObject.addProperty("max", this.maxPlayers);
+		playersObject.addProperty("online", this.onlinePlayers);
+		if (Objects.nonNull(this.playerSample)) {
 			JsonArray sampleArray = new JsonArray();
-			for (String sample : playerSample) {
+			for (String sample : this.playerSample) {
 				JsonObject sampleObject = new JsonObject();
 				sampleObject.addProperty("name", sample);
 				sampleObject.addProperty("id", UUID.randomUUID().toString());
@@ -57,15 +119,15 @@ public class ServerPing {
 		}
 
 		statusObject.add("players", playersObject);
-		if (protocolVersion.getProtocol() >= ProtocolVersion.MC_1_16_0.getProtocol()) {
-			JsonObject descriptionObject = new JsonObject();
-			descriptionObject.addProperty("text", description);
-			statusObject.add("description", descriptionObject);
+		if (protocolVersion.isAfter(ProtocolVersion.MC_1_8_0)) {
+			statusObject.add("description",
+					ComponentParser.toJson(this.description, protocolVersion, true));
 		} else {
-			statusObject.addProperty("description", description);
+			statusObject.addProperty("description", ComponentParser.toFormattedText(this.description));
 		}
 
-		statusObject.addProperty("favicon", Objects.isNull(favicon) ? "" : favicon.getBase64Url());
+		statusObject.addProperty("favicon",
+				Objects.isNull(this.favicon) ? "" : this.favicon.getBase64Url());
 		return statusObject.toString();
 	}
 
@@ -104,7 +166,7 @@ public class ServerPing {
 		}
 
 		public String getBase64Url() {
-			return base64Url;
+			return this.base64Url;
 		}
 	}
 }

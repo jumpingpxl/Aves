@@ -8,7 +8,7 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.WriteBufferWaterMark;
 import io.netty.channel.epoll.EpollChannelOption;
 import one.aves.api.console.ConsoleLogger;
-import one.aves.proxy.Aves;
+import one.aves.proxy.DefaultAves;
 
 import java.net.InetSocketAddress;
 
@@ -23,11 +23,11 @@ public class ConnectionHandler {
 	private final EventLoopGroup bossGroup;
 	private final EventLoopGroup workerGroup;
 
-	public ConnectionHandler(Aves aves) {
-		serverChannelInitializer = new ServerChannelInitializer(aves);
-		transportType = TransportType.bestType();
-		bossGroup = transportType.createEventLoopGroup(TransportType.Type.BOSS);
-		workerGroup = transportType.createEventLoopGroup(TransportType.Type.WORKER);
+	public ConnectionHandler(DefaultAves aves) {
+		this.serverChannelInitializer = new ServerChannelInitializer(aves);
+		this.transportType = TransportType.bestType();
+		this.bossGroup = this.transportType.createEventLoopGroup(TransportType.Type.BOSS);
+		this.workerGroup = this.transportType.createEventLoopGroup(TransportType.Type.WORKER);
 	}
 
 	public void bind(InetSocketAddress address) {
@@ -35,13 +35,14 @@ public class ConnectionHandler {
 						this.transportType.serverSocketChannelFactory)
 				.group(this.bossGroup, this.workerGroup)
 				.childOption(ChannelOption.WRITE_BUFFER_WATER_MARK, SERVER_WRITE_MARK)
-				.childHandler(serverChannelInitializer)
+				.childHandler(this.serverChannelInitializer)
 				.childOption(ChannelOption.TCP_NODELAY, true)
 				.childOption(ChannelOption.SO_KEEPALIVE, true)
 				.childOption(ChannelOption.IP_TOS, 0x18)
 				.localAddress(address);
 
-		if (transportType == TransportType.EPOLL) {// && server.getConfiguration().useTcpFastOpen()) {
+		if (this.transportType
+				== TransportType.EPOLL) {// && server.getConfiguration().useTcpFastOpen()) {
 			bootstrap.option(EpollChannelOption.TCP_FASTOPEN, 3);
 		}
 

@@ -11,7 +11,7 @@ import io.netty.util.concurrent.GenericFutureListener;
 import one.aves.api.connection.GameProfile;
 import one.aves.api.connection.ProtocolVersion;
 import one.aves.api.console.ConsoleLogger;
-import one.aves.proxy.Aves;
+import one.aves.proxy.DefaultAves;
 import one.aves.proxy.network.encryption.EncryptionDecoder;
 import one.aves.proxy.network.encryption.EncryptionEncoder;
 import one.aves.proxy.network.handler.NetworkHandler;
@@ -28,7 +28,7 @@ public class MinecraftConnection extends SimpleChannelInboundHandler<NettyPacket
 
 	private static final ConsoleLogger LOGGER = ConsoleLogger.of(MinecraftConnection.class);
 
-	private final Aves aves;
+	private final DefaultAves aves;
 	private final Direction direction;
 	private final ReentrantReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 	private final Queue<InboundHandlerTuplePacketListener> outboundPacketsQueue =
@@ -39,8 +39,9 @@ public class MinecraftConnection extends SimpleChannelInboundHandler<NettyPacket
 	private NetworkHandler networkHandler;
 	private boolean encrypted;
 	private GameProfile gameProfile;
+	private ProtocolVersion protocolVersion;
 
-	public MinecraftConnection(Aves aves, Direction direction) {
+	public MinecraftConnection(DefaultAves aves, Direction direction) {
 		this.aves = aves;
 		this.direction = direction;
 		LOGGER.printInfo("Created MinecraftConnection with direction %s", direction);
@@ -148,7 +149,12 @@ public class MinecraftConnection extends SimpleChannelInboundHandler<NettyPacket
 	}
 
 	public void setProtocolVersion(ProtocolVersion protocolVersion) {
+		this.protocolVersion = protocolVersion;
 		this.channel.attr(ProtocolVersion.ATTRIBUTE_KEY).set(protocolVersion);
+	}
+
+	public ProtocolVersion protocolVersion() {
+		return this.protocolVersion;
 	}
 
 	public void setNetworkHandler(NetworkHandler networkHandler) {
@@ -173,7 +179,7 @@ public class MinecraftConnection extends SimpleChannelInboundHandler<NettyPacket
 		super.exceptionCaught(ctx, cause);
 	}
 
-	public Aves aves() {
+	public DefaultAves aves() {
 		return this.aves;
 	}
 

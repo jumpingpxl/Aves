@@ -1,7 +1,8 @@
 package one.aves.proxy.network.handler;
 
-import one.aves.api.connection.ServerPing;
+import one.aves.api.connection.ServerInfo;
 import one.aves.api.console.ConsoleLogger;
+import one.aves.api.event.events.network.ServerListPingEvent;
 import one.aves.proxy.network.MinecraftConnection;
 import one.aves.proxy.network.protocol.packet.status.clientbound.PongPacket;
 import one.aves.proxy.network.protocol.packet.status.clientbound.StatusResponsePacket;
@@ -31,10 +32,16 @@ public class NetworkStatusHandler implements NetworkHandler {
 			return;
 		}
 
-		this.requestedStatus = true;
+		ServerListPingEvent event = new ServerListPingEvent(this.connection.protocolVersion(),
+				new ServerInfo());
+		this.connection.aves().eventService().fire(event);
+		if (event.isCancelled()) {
+			this.connection.close();
+			return;
+		}
 
+		this.requestedStatus = true;
 		//todo use server info from event
-		ServerPing serverPing = new ServerPing();
-		this.connection.sendPacket(new StatusResponsePacket(serverPing));
+		this.connection.sendPacket(new StatusResponsePacket(event.serverInfo()));
 	}
 }

@@ -84,6 +84,10 @@ public class Component {
 		return this;
 	}
 
+	public @Nonnull Component append(String text) {
+		return this.append(Component.text(text));
+	}
+
 	public @Nonnull Component append(Component child) {
 		Objects.requireNonNull(child, "Child to append cannot be null");
 		if (this.children == null) {
@@ -96,7 +100,7 @@ public class Component {
 	}
 
 	public @Nullable Component getParent() {
-		return parent;
+		return this.parent;
 	}
 
 	public @Nonnull Component root() {
@@ -108,23 +112,23 @@ public class Component {
 	}
 
 	public String getText() {
-		return text;
+		return this.text;
 	}
 
 	public Font getFont() {
-		return font;
+		return this.font;
 	}
 
 	public ClickEvent getClickEvent() {
-		return clickEvent;
+		return this.clickEvent;
 	}
 
 	public HoverEvent getHoverEvent() {
-		return hoverEvent;
+		return this.hoverEvent;
 	}
 
 	public TextColor getColor() {
-		return color;
+		return this.color;
 	}
 
 	public List<TextDecoration> getDecorations() {
@@ -132,7 +136,7 @@ public class Component {
 			return null;
 		}
 
-		return Collections.unmodifiableList(decorations);
+		return Collections.unmodifiableList(this.decorations);
 	}
 
 	public List<Component> getChildren() {
@@ -140,7 +144,7 @@ public class Component {
 			return null;
 		}
 
-		return Collections.unmodifiableList(children);
+		return Collections.unmodifiableList(this.children);
 	}
 
 	public Component copy() {
@@ -167,39 +171,41 @@ public class Component {
 		if (this == o) {
 			return true;
 		}
-		if (o == null || getClass() != o.getClass()) {
+		if (o == null || this.getClass() != o.getClass()) {
 			return false;
 		}
 		Component component = (Component) o;
-		return text.equals(component.text) && Objects.equals(font, component.font) && Objects.equals(
-				clickEvent, component.clickEvent) && Objects.equals(hoverEvent, component.hoverEvent)
-				&& Objects.equals(color, component.color) && Objects.equals(decorations,
-				component.decorations) && Objects.equals(children, component.children);
+		return this.text.equals(component.text) && Objects.equals(this.font, component.font)
+				&& Objects.equals(this.clickEvent, component.clickEvent) && Objects.equals(this.hoverEvent,
+				component.hoverEvent) && Objects.equals(this.color, component.color) && Objects.equals(
+				this.decorations, component.decorations) && Objects.equals(this.children,
+				component.children);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(text, font, clickEvent, hoverEvent, color, decorations, children);
+		return Objects.hash(this.text, this.font, this.clickEvent, this.hoverEvent, this.color,
+				this.decorations, this.children);
 	}
 
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder("Component{");
-		sb.append("text='").append(text).append('\'');
+		sb.append("text='").append(this.text).append('\'');
 		if (this.font != null) {
-			sb.append(", font=").append(font);
+			sb.append(", font=").append(this.font);
 		}
 
 		if (this.clickEvent != null) {
-			sb.append(", clickEvent=").append(clickEvent);
+			sb.append(", clickEvent=").append(this.clickEvent);
 		}
 
 		if (this.hoverEvent != null) {
-			sb.append(", hoverEvent=").append(hoverEvent);
+			sb.append(", hoverEvent=").append(this.hoverEvent);
 		}
 
 		if (this.color != null) {
-			sb.append(", color=").append(color);
+			sb.append(", color=").append(this.color);
 		}
 
 		if (this.decorations != null && !this.decorations.isEmpty()) {

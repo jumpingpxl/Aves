@@ -4,7 +4,7 @@ import one.aves.api.console.ConsoleLogger;
 import one.aves.api.network.NetworkHandler;
 import one.aves.api.network.connection.ConnectionState;
 import one.aves.proxy.network.MinecraftConnection;
-import one.aves.proxy.network.packet.serverbound.HandshakePacket;
+import one.aves.proxy.network.packet.handshake.serverbound.HandshakePacket;
 
 public class NetworkHandshakeHandler implements NetworkHandler {
 

@@ -1,4 +1,4 @@
-package one.aves.proxy.network.packet.serverbound;
+package one.aves.proxy.network.packet.handshake.serverbound;
 
 import one.aves.api.network.ByteBuffer;
 import one.aves.api.network.Direction;

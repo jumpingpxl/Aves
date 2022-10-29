@@ -7,8 +7,8 @@ import one.aves.api.network.connection.GameProfile;
 import one.aves.proxy.DefaultAves;
 import one.aves.proxy.connection.PrematureGameProfile;
 import one.aves.proxy.network.MinecraftConnection;
-import one.aves.proxy.network.packet.common.clientbound.DisconnectPacket;
 import one.aves.proxy.network.packet.login.clientbound.EncryptionRequestPacket;
+import one.aves.proxy.network.packet.login.clientbound.LoginDisconnectPacket;
 import one.aves.proxy.network.packet.login.serverbound.EncryptionResponsePacket;
 import one.aves.proxy.network.packet.login.serverbound.LoginStartPacket;
 
@@ -73,6 +73,6 @@ public class NetworkLoginHandler implements NetworkHandler {
 	}
 
 	private void disconnect(String reason) {
-		this.connection.sendPacket(new DisconnectPacket(Component.text(reason)));
+		this.connection.sendPacket(new LoginDisconnectPacket(Component.text(reason)));
 	}
 }

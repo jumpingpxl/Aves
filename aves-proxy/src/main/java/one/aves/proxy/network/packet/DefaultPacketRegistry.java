@@ -7,8 +7,8 @@ import one.aves.api.network.packet.Packet;
 import one.aves.api.network.packet.PacketRegistry;
 import one.aves.api.service.ServiceProvider;
 import one.aves.api.util.Registry;
-import one.aves.proxy.network.packet.common.clientbound.DisconnectPacket;
 import one.aves.proxy.network.packet.login.clientbound.EncryptionRequestPacket;
+import one.aves.proxy.network.packet.login.clientbound.LoginDisconnectPacket;
 import one.aves.proxy.network.packet.login.clientbound.LoginSuccessPacket;
 import one.aves.proxy.network.packet.login.serverbound.EncryptionResponsePacket;
 import one.aves.proxy.network.packet.login.serverbound.LoginStartPacket;
@@ -128,7 +128,7 @@ public class DefaultPacketRegistry implements PacketRegistry {
 
 		//login
 		this.registerLoginPacket(Direction.SERVERBOUND, 0x00, LoginStartPacket.class);
-		this.registerLoginPacket(Direction.CLIENTBOUND, 0x00, DisconnectPacket.class);
+		this.registerLoginPacket(Direction.CLIENTBOUND, 0x00, LoginDisconnectPacket.class);
 		this.registerLoginPacket(Direction.CLIENTBOUND, 0x01, EncryptionRequestPacket.class);
 		this.registerLoginPacket(Direction.SERVERBOUND, 0x01, EncryptionResponsePacket.class);
 		this.registerLoginPacket(Direction.CLIENTBOUND, 0x02, LoginSuccessPacket.class);

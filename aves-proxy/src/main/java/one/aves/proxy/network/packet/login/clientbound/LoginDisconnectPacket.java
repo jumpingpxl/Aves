@@ -1,4 +1,4 @@
-package one.aves.proxy.network.packet.common.clientbound;
+package one.aves.proxy.network.packet.login.clientbound;
 
 import com.google.gson.JsonObject;
 import one.aves.api.component.Component;
@@ -9,11 +9,11 @@ import one.aves.api.network.NetworkHandler;
 import one.aves.api.network.ProtocolVersion;
 import one.aves.api.network.packet.Packet;
 
-public class DisconnectPacket implements Packet<NetworkHandler> {
+public class LoginDisconnectPacket implements Packet<NetworkHandler> {
 
 	private final Component component;
 
-	public DisconnectPacket(Component component) {
+	public LoginDisconnectPacket(Component component) {
 		this.component = component;
 	}
 

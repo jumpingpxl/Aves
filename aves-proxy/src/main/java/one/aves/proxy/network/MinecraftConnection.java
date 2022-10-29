@@ -24,7 +24,7 @@ import javax.crypto.SecretKey;
 import java.util.Queue;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-public class MinecraftConnection extends SimpleChannelInboundHandler<Packet> {
+public class MinecraftConnection extends SimpleChannelInboundHandler<Packet<?>> {
 
 	private static final ConsoleLogger LOGGER = ConsoleLogger.of(MinecraftConnection.class);
 

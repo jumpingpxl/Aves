@@ -50,11 +50,11 @@ public class ProtocolVersion {
 	public static final ProtocolVersion MC_1_18_2 = new ProtocolVersion(758, "1.18.2");
 	public static final ProtocolVersion MC_1_19_0 = new ProtocolVersion(759, "1.19");
 	public static final ProtocolVersion MC_1_19_1 = new ProtocolVersion(760, "1.19.1", "1.19.2");
-	private static final int SNAPSHOT_OFFSET = 0x40000000;
 
 	public static final AttributeKey<ProtocolVersion> ATTRIBUTE_KEY = AttributeKey.valueOf(
 			"version");
 
+	private static final int SNAPSHOT_OFFSET = 0x40000000;
 	private final int protocol;
 	private final String[] names;
 	private final boolean unknown;
@@ -72,22 +72,6 @@ public class ProtocolVersion {
 		if (!unknown) {
 			VALUES.add(this);
 		}
-	}
-
-	public int getProtocol() {
-		return this.protocol;
-	}
-
-	public String[] getNames() {
-		return this.names;
-	}
-
-	public boolean isBefore(ProtocolVersion version) {
-		return this.protocol < version.protocol;
-	}
-
-	public boolean isAfter(ProtocolVersion version) {
-		return this.protocol >= version.protocol;
 	}
 
 	private static ProtocolVersion get(int protocol) {
@@ -116,6 +100,31 @@ public class ProtocolVersion {
 		return protocolVersion;
 	}
 
+	public static ProtocolVersion fromContext(ChannelHandlerContext context) {
+		ProtocolVersion protocolVersion = context.channel().attr(ATTRIBUTE_KEY).get();
+		if (protocolVersion == null) {
+			return UNKNOWN;
+		}
+
+		return protocolVersion;
+	}
+
+	public int getProtocol() {
+		return this.protocol;
+	}
+
+	public String[] getNames() {
+		return this.names;
+	}
+
+	public boolean isBefore(ProtocolVersion version) {
+		return this.protocol < version.protocol;
+	}
+
+	public boolean isAfter(ProtocolVersion version) {
+		return this.protocol >= version.protocol;
+	}
+
 	public boolean isUnknown() {
 		return this.unknown;
 	}
@@ -136,15 +145,6 @@ public class ProtocolVersion {
 
 		this.snapshot = this.protocol - SNAPSHOT_OFFSET >= 0;
 		return this.snapshot;
-	}
-
-	public static ProtocolVersion fromContext(ChannelHandlerContext context) {
-		ProtocolVersion protocolVersion = context.channel().attr(ATTRIBUTE_KEY).get();
-		if (protocolVersion == null) {
-			return UNKNOWN;
-		}
-
-		return protocolVersion;
 	}
 
 	@Override

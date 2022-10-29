@@ -37,8 +37,7 @@ public class ConsoleLogger {
 	private void print(Level level, String message, Object... params) {
 		System.out.println(
 				dateFormat.format(System.currentTimeMillis()) + level.getName() + " - " + this.name + " "
-						+ "-> "
-						+ this.getMessage(message, params));
+						+ "-> " + this.getMessage(message, params));
 	}
 
 	private void print(Level level, String message, Throwable throwable, Object... params) {

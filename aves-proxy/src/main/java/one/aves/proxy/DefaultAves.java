@@ -66,4 +66,8 @@ public class DefaultAves implements Aves {
 	public PacketRegistry packetRegistry() {
 		return this.packetRegistry;
 	}
+
+	public ConnectionHandler getConnectionHandler() {
+		return this.connectionHandler;
+	}
 }

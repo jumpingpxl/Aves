@@ -33,7 +33,7 @@ public class NetworkStatusHandler implements NetworkHandler {
 			return;
 		}
 
-		ServerListPingEvent event = new ServerListPingEvent(this.connection.protocolVersion(),
+		ServerListPingEvent event = new ServerListPingEvent(this.connection.connection(),
 				new ServerInfo());
 		this.connection.aves().eventService().fire(event);
 		if (event.isCancelled()) {

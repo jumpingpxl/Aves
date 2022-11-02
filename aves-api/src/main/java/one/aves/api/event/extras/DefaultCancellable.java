@@ -1,8 +1,11 @@
-package one.aves.api.event;
+package one.aves.api.event.extras;
 
 public abstract class DefaultCancellable implements Cancellable {
 
 	private boolean cancelled;
+
+	protected DefaultCancellable() {
+	}
 
 	@Override
 	public boolean isCancelled() {

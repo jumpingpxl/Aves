@@ -13,6 +13,9 @@ import one.aves.proxy.network.packet.login.clientbound.LoginDisconnectPacket;
 import one.aves.proxy.network.packet.login.clientbound.LoginSuccessPacket;
 import one.aves.proxy.network.packet.login.serverbound.EncryptionResponsePacket;
 import one.aves.proxy.network.packet.login.serverbound.LoginStartPacket;
+import one.aves.proxy.network.packet.play.clientbound.OutgoingPluginMessagePacket;
+import one.aves.proxy.network.packet.play.clientbound.PlayDisconnectPacket;
+import one.aves.proxy.network.packet.play.serverbound.IncomingPluginMessagePacket;
 import one.aves.proxy.network.packet.status.clientbound.PongPacket;
 import one.aves.proxy.network.packet.status.clientbound.StatusResponsePacket;
 import one.aves.proxy.network.packet.status.serverbound.PingPacket;
@@ -134,6 +137,9 @@ public class DefaultPacketRegistry implements PacketRegistry {
 		this.registerLoginPacket(Direction.CLIENTBOUND, 0x02, LoginSuccessPacket.class);
 
 		//play
+		this.registerPlayPacket(Direction.SERVERBOUND, 0x17, IncomingPluginMessagePacket.class);
+		this.registerPlayPacket(Direction.CLIENTBOUND, 0x3F, OutgoingPluginMessagePacket.class);
+		this.registerPlayPacket(Direction.CLIENTBOUND, 0x40, PlayDisconnectPacket.class);
 
 		return this;
 	}
@@ -148,8 +154,8 @@ public class DefaultPacketRegistry implements PacketRegistry {
 		this.register(direction, ConnectionState.LOGIN, packetId, packetClass);
 	}
 
-	private void registePlayPacket(Direction direction, int packetId,
-	                               Class<? extends Packet<?>> packetClass) {
+	private void registerPlayPacket(Direction direction, int packetId,
+	                                Class<? extends Packet<?>> packetClass) {
 		this.register(direction, ConnectionState.PLAY, packetId, packetClass);
 	}
 }

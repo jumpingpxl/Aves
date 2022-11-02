@@ -5,11 +5,11 @@ import one.aves.api.network.connection.GameProfile;
 import java.util.Map;
 import java.util.UUID;
 
-public class PrematureGameProfile implements GameProfile {
+public class IncompleteGameProfile implements GameProfile {
 
 	private final String userName;
 
-	public PrematureGameProfile(String userName) {
+	public IncompleteGameProfile(String userName) {
 		this.userName = userName;
 	}
 
@@ -26,5 +26,10 @@ public class PrematureGameProfile implements GameProfile {
 	@Override
 	public Map<String, Property> getProperties() {
 		throw new IllegalStateException("Game profile is not ready yet");
+	}
+
+	@Override
+	public boolean isIncomplete() {
+		return true;
 	}
 }

@@ -1,12 +1,13 @@
 package one.aves.api.component;
 
+import javax.annotation.Nonnull;
 import java.util.Objects;
 
 public class Font {
 
-	public static final Font UNIFORM = new Font("minecraft:uniform");
-	public static final Font ALT = new Font("minecraft:alt");
-	public static final Font DEFAULT = new Font("minecraft:default");
+	public static final Font UNIFORM = Font.of("uniform");
+	public static final Font ALT = Font.of("alt");
+	public static final Font DEFAULT = Font.of("default");
 
 	private final String actualName;
 
@@ -14,13 +15,24 @@ public class Font {
 		this.actualName = actualName;
 	}
 
+	public static Font of(@Nonnull String namespace, @Nonnull String name) {
+		Objects.requireNonNull(name, "Font name space cannot be null");
+		Objects.requireNonNull(name, "Font name cannot be null");
+		return new Font(namespace + ":" + name);
+	}
+
+	public static Font of(@Nonnull String name) {
+		Objects.requireNonNull(name, "Font name cannot be null");
+		return new Font("minecraft:" + name);
+	}
+
 	public String getActualName() {
-		return actualName;
+		return this.actualName;
 	}
 
 	@Override
 	public String toString() {
-		return "Font{" + "actualName='" + actualName + '\'' + '}';
+		return "Font{" + "actualName='" + this.actualName + '\'' + '}';
 	}
 
 	@Override
@@ -28,15 +40,15 @@ public class Font {
 		if (this == o) {
 			return true;
 		}
-		if (o == null || getClass() != o.getClass()) {
+		if (o == null || this.getClass() != o.getClass()) {
 			return false;
 		}
 		Font font = (Font) o;
-		return actualName.equals(font.actualName);
+		return this.actualName.equals(font.actualName);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(actualName);
+		return Objects.hash(this.actualName);
 	}
 }

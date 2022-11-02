@@ -11,6 +11,18 @@ public interface GameProfile {
 
 	Map<String, Property> getProperties();
 
+	default boolean isComplete() {
+		return !this.isEmpty() && !this.isIncomplete();
+	}
+
+	default boolean isIncomplete() {
+		return false;
+	}
+
+	default boolean isEmpty() {
+		return false;
+	}
+
 	class Property {
 
 		private final String name;

@@ -8,6 +8,7 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.WriteBufferWaterMark;
 import io.netty.channel.epoll.EpollChannelOption;
 import one.aves.api.console.ConsoleLogger;
+import one.aves.api.network.connection.Connection;
 import one.aves.proxy.DefaultAves;
 
 import java.net.InetSocketAddress;
@@ -54,5 +55,13 @@ public class ConnectionHandler {
 				LOGGER.printSevere("Can't bind to %s! (Cause: %s)", address, future.cause());
 			}
 		});
+	}
+
+	public void registerConnection(Connection connection) {
+
+	}
+
+	public void unregisterConnection(Connection connection) {
+
 	}
 }

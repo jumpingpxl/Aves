@@ -36,6 +36,8 @@ public class DefaultEventService implements EventService {
 	public <T extends Event> T fire(T event) {
 		List<SubscribeMethod> methods = this.subscribeMethods.get(event.getClass());
 		if (methods == null) {
+			LOGGER.printInfo("Fired event %s but no one is listening. :sadge:",
+					event.getClass().getSimpleName());
 			return event;
 		}
 

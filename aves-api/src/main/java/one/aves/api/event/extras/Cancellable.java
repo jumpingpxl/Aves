@@ -1,4 +1,4 @@
-package one.aves.api.event;
+package one.aves.api.event.extras;
 
 public interface Cancellable {
 

@@ -8,7 +8,7 @@ import java.util.List;
 
 public class ComponentParser {
 
-	private static final char LEGACY_COLOR_CHARACTER = '§';
+	private static final char LEGACY_COLOR_CHARACTER = '\u00A7';
 
 	private ComponentParser() {
 
